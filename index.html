@@ -1,6 +1,23 @@
 <!DOCTYPE html>
+<head>
+    <title>Happiest People in the world</title>
+    <link rel="stylesheet" href="style/style.css" type="text/css" media="screen" />
+</head>
+
 <meta charset="utf-8">
 <body>
+<div id="main-wrapper">
+    <div id="controls">
+		<div id="buttons">
+            <h3>Select Year</h3>
+			<div class="button current" data-val="0">2008</div>
+			<div class="button" data-val="1" style="margin-right:0">2014</div>
+			<div class="clr"></div>
+		</div>
+	</div>
+    <div id="chart"></div>
+</div>
+
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 
