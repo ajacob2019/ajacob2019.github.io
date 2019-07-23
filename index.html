@@ -1,86 +1,111 @@
-<!doctype html>
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-  <title>Gates Foundation Spending - Vallandingham.me</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-
-  <!-- CSS concatenated and minified via ant build script-->
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/style.css">
-  <!-- end CSS-->
-
-  <script src="js/libs/modernizr-2.0.6.min.js"></script>
-</head>
-
+<!DOCTYPE html>
+<meta charset="utf-8">
 <body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
 
-  <div id="container" class="container">
-    <header>
-    <h1>Gates Foundation Educational Spending</h1>
-    </header>
-    <div id="main" role="main">
-      <div id="view_selection" class="btn-group">
-        <a href="#" id="all" class="btn active">All Grants</a>
-        <a href="#" id="year" class="btn">Grants By Year</a>
-      </div>
-      <div id="vis"></div>
-    </div>
-    <footer>
-    <p>A demonstration of animated bubble charts in D3.js</p>
-    <p><a href="http://vallandingham.me/bubble_charts_in_d3.html">Blog Post</a> | <a href="https://github.com/vlandham/vlandham.github.com/blob/master/vis/gates/coffee/vis.coffee">Code</a> | <a href="http://www.washingtonpost.com/wp-srv/metro/data/gates-grants.html">Data</a></p>
-    </footer>
-  </div> <!--! end of #container -->
+var width = 960,
+    height = 500,
+    padding = 1.5, // separation between same-color circles
+    clusterPadding = 6, // separation between different-color circles
+    maxRadius = 12;
 
+var n = 200, // total number of circles
+    m = 10; // number of distinct clusters
 
-  <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> -->
-  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+var color = d3.scale.category10()
+    .domain(d3.range(m));
 
-  <script defer src="js/plugins.js"></script>
-  <script defer src="js/script.js"></script>
-  <script src="js/CustomTooltip.js"></script>
-  <script src="js/libs/coffee-script.js"></script>
-  <script src="js/libs/d3.min.js"></script>
-  <script src="js/libs/d3.csv.min.js"></script>
-  <script src="js/libs/d3.layout.min.js"></script>
-  <script src="js/libs/d3.geom.min.js"></script>
-  <script type="text/coffeescript" src="coffee/vis.coffee"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-        $(document).ready(function() {
-          $('#view_selection a').click(function() {
-            var view_type = $(this).attr('id');
-            $('#view_selection a').removeClass('active');
-            $(this).toggleClass('active');
-            toggle_view(view_type);
-            return false;
-          });
-        });
+// The largest node for each cluster.
+var clusters = new Array(m);
+
+var nodes = d3.range(n).map(function() {
+  var i = Math.floor(Math.random() * m),
+      r = Math.sqrt((i + 1) / m * -Math.log(Math.random())) * maxRadius,
+      d = {cluster: i, radius: r};
+  if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
+  return d;
+});
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .size([width, height])
+    .gravity(0)
+    .charge(0)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var circle = svg.selectAll("circle")
+    .data(nodes)
+  .enter().append("circle")
+    .attr("r", function(d) { return d.radius; })
+    .style("fill", function(d) { return color(d.cluster); })
+    .call(force.drag);
+
+function tick(e) {
+  circle
+      .each(cluster(10 * e.alpha * e.alpha))
+      .each(collide(.5))
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
+}
+
+// Move d to be adjacent to the cluster node.
+function cluster(alpha) {
+  return function(d) {
+    var cluster = clusters[d.cluster],
+        k = 1;
+
+    // For cluster nodes, apply custom gravity.
+    if (cluster === d) {
+      cluster = {x: width / 2, y: height / 2, radius: -d.radius};
+      k = .1 * Math.sqrt(d.radius);
+    }
+
+    var x = d.x - cluster.x,
+        y = d.y - cluster.y,
+        l = Math.sqrt(x * x + y * y),
+        r = d.radius + cluster.radius;
+    if (l != r) {
+      l = (l - r) / l * alpha * k;
+      d.x -= x *= l;
+      d.y -= y *= l;
+      cluster.x += x;
+      cluster.y += y;
+    }
+  };
+}
+
+// Resolves collisions between d and all other circles.
+function collide(alpha) {
+  var quadtree = d3.geom.quadtree(nodes);
+  return function(d) {
+    var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
+        nx1 = d.x - r,
+        nx2 = d.x + r,
+        ny1 = d.y - r,
+        ny2 = d.y + r;
+    quadtree.visit(function(quad, x1, y1, x2, y2) {
+      if (quad.point && (quad.point !== d)) {
+        var x = d.x - quad.point.x,
+            y = d.y - quad.point.y,
+            l = Math.sqrt(x * x + y * y),
+            r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
+        if (l < r) {
+          l = (l - r) / l * alpha;
+          d.x -= x *= l;
+          d.y -= y *= l;
+          quad.point.x += x;
+          quad.point.y += y;
+        }
+      }
+      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
     });
-  </script>
+  };
+}
 
-
-  <script>
-    window._gaq = [['_setAccount','UA-17355070-1'],['_trackPageview'],['_trackPageLoadTime']];
-    Modernizr.load({
-      load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-    });
-  </script>
-
-
-  <!--[if lt IE 7 ]>
-    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-    <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
-  <![endif]-->
-  
-</body>
-</html>
+</script>
