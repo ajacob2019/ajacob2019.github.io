@@ -1,10 +1,5 @@
-<!DOCTYPE html>
+<!Doctype html>
 <html>
-<head>
-    <title>Happiest People in the world</title>
-    <link rel="stylesheet" href="style/style.css" type="text/css" media="screen" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
 <style>
 .btn-group button {
   background-color: #4CAF50; /* Green background */
@@ -33,15 +28,52 @@
 </style>
 <body>
 
-<h1>Happiest People in the World</h1>
+<h1>Happiest </h1>
 
 <div class="btn-group">
   <button>Apple</button>
   <button>Samsung</button>
   <button>Sony</button>
 </div>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<style> circle {fill: lightblue; stroke: black;} </style>
+<body onload='init()'>
+<svg width=500 height=500>
+</svg>
+<script>
+async function init() {
+const csvdata = await d3.csv('https://flunky.github.io/cars2017.csv');
+sx = d3.scaleLog().base(10).domain([10,150]).range([0,200]);
+sy = d3.scaleLog().base(10).domain([10,150]).range([200,0]);
+x = d3.scaleLog().domain([10,150]).range([0, 200]);
+y = d3.scaleLog().domain([10,150]).range([200, 0]);
+
+ d3.select('svg')
+   .append('g').attr('transform','translate(50,50)')
+   .selectAll('circle')
+   .data(csvdata)
+   .enter()
+   .append('circle')
+   .attr('cx', function(d, i){return sx(d.AverageCityMPG);})        
+   .attr('cy', function(d, i){return sy(d.AverageHighwayMPG);})          
+   .attr('r', function(d, i){return  2 + parseInt(d.EngineCylinders);});
+
+d3.select('svg').
+    append('g')
+    .attr('transform','translate(50,50)')
+    .call(d3.axisLeft(y)
+         .tickValues([10,20,50,100])
+         .tickFormat(d3.format("~s")) 
+    ); 
+ d3.select('svg')
+    .append('g')
+    .attr('transform','translate(50,250)')
+    .call(d3.axisBottom(x)
+         .tickValues([10,20,50,100])
+         .tickFormat(d3.format("~s"))
+    );
+}
+</script>
 
 </body>
-</html> 
-
-
+</html>
