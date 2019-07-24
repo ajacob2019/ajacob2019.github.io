@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
   <!-- Bootstrap -->
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -13,23 +13,59 @@
     body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
    
     #story-buttons {margin-left: 360px; margin-top:40px}
-     #commentary {margin-top: 100px;left:120px;font-size:36pt; font-family: "monospace";text-align:center;}
+    #commentary {margin-top: 100px;left:120px;font-size:36pt; font-family: "monospace";text-align:center;}
+    circle {fill: lightblue; stroke: black;}
  
   </style>
 </head>
 
-<body>
+<body onload='init()'>
+<svg width=300 height=300>
+</svg>
   <script>
  
-     function  dispatchButton(source) {
+    function  dispatchButton(source) {
          d3.select("#commentary").text("You selected " + source);
     }
 
+    async function init() {
+        const csvdata = await d3.csv('https://flunky.github.io/cars2017.csv');
+        x = d3.scaleLinear().domain([0,200]).range([0, 200]);
+        y = d3.scaleLinear().domain([0,150]).range([200, 0]);
+
+         d3.select('svg')
+           .append('g').attr('transform','translate(50,50)')
+           .selectAll('circle')
+           .data(csvdata)
+           .enter()
+           .append('circle')
+           .attr('cx', function(d, i){return i;})        
+           .attr('cy', function(d, i){return sy(d.AverageHighwayMPG);})          
+           .attr('r', function(d, i){return  4});
+
+        d3.select('svg').
+            append('g')
+            .attr('transform','translate(50,50)')
+            .call(d3.axisLeft(y)
+                 .tickValues([10,20,50,100])
+                 .tickFormat(d3.format("~s")) 
+            ); 
+         d3.select('svg')
+            .append('g')
+            .attr('transform','translate(50,250)')
+            .call(d3.axisBottom(x)
+                 .tickValues([10,20,50,100])
+                 .tickFormat(d3.format("~s"))
+            ); 
+    
+    }
+    
   </script>
   <div id="story-buttons" class="btn-group" role="group" aria-label="questions to be answered">
   <button id="thunder" type="button" class="btn btn-default" onClick="dispatchButton('thunder');">Thunder</button>
   <button id="lightning" type="button" class="btn btn-default" onClick="dispatchButton('lightning');">Lightning</button>
   <button id="hail" type="button" class="btn btn-default" onClick="dispatchButton('hail');">Hail</button>
+  
 </div>
    <div id="commentary" > </div>
 </body>
