@@ -1,79 +1,35 @@
-<!Doctype html>
-<html>
-<style>
-.btn-group button {
-  background-color: #4CAF50; /* Green background */
-  border: 1px solid green; /* Green border */
-  color: white; /* White text */
-  padding: 10px 24px; /* Some padding */
-  cursor: pointer; /* Pointer/hand icon */
-  float: left; /* Float the buttons side by side */
-}
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <!-- Bootstrap -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-/* Clear floats (clearfix hack) */
-.btn-group:after {
-  content: "";
-  clear: both;
-  display: table;
-}
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <!-- end Bootstrap -->
+  <style>
+    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+   
+    #story-buttons {margin-left: 360px; margin-top:40px}
+     #commentary {margin-top: 100px;left:120px;font-size:36pt; font-family: "monospace";text-align:center;}
+ 
+  </style>
+</head>
 
-.btn-group button:not(:last-child) {
-  border-right: none; /* Prevent double borders */
-}
-
-/* Add a background color on hover */
-.btn-group button:hover {
-  background-color: #3e8e41;
-}
-</style>
 <body>
+  <script>
+ 
+     function  dispatchButton(source) {
+         d3.select("#commentary").text("You selected " + source);
+    }
 
-<h1>Happiest </h1>
-
-<div class="btn-group">
-  <button>Apple</button>
-  <button>Samsung</button>
-  <button>Sony</button>
+  </script>
+  <div id="story-buttons" class="btn-group" role="group" aria-label="questions to be answered">
+  <button id="thunder" type="button" class="btn btn-default" onClick="dispatchButton('thunder');">Thunder</button>
+  <button id="lightning" type="button" class="btn btn-default" onClick="dispatchButton('lightning');">Lightning</button>
+  <button id="hail" type="button" class="btn btn-default" onClick="dispatchButton('hail');">Hail</button>
 </div>
-<script src='https://d3js.org/d3.v5.min.js'></script>
-<style> circle {fill: lightblue; stroke: black;} </style>
-<body onload='init()'>
-<svg width=500 height=500>
-</svg>
-<script>
-async function init() {
-const csvdata = await d3.csv('https://flunky.github.io/cars2017.csv');
-sx = d3.scaleLog().base(10).domain([10,150]).range([0,200]);
-sy = d3.scaleLog().base(10).domain([10,150]).range([200,0]);
-x = d3.scaleLog().domain([10,150]).range([0, 200]);
-y = d3.scaleLog().domain([10,150]).range([200, 0]);
-
- d3.select('svg')
-   .append('g').attr('transform','translate(50,50)')
-   .selectAll('circle')
-   .data(csvdata)
-   .enter()
-   .append('circle')
-   .attr('cx', function(d, i){return sx(d.AverageCityMPG);})        
-   .attr('cy', function(d, i){return sy(d.AverageHighwayMPG);})          
-   .attr('r', function(d, i){return  2 + parseInt(d.EngineCylinders);});
-
-d3.select('svg').
-    append('g')
-    .attr('transform','translate(50,50)')
-    .call(d3.axisLeft(y)
-         .tickValues([10,20,50,100])
-         .tickFormat(d3.format("~s")) 
-    ); 
- d3.select('svg')
-    .append('g')
-    .attr('transform','translate(50,250)')
-    .call(d3.axisBottom(x)
-         .tickValues([10,20,50,100])
-         .tickFormat(d3.format("~s"))
-    );
-}
-</script>
-
+   <div id="commentary" > </div>
 </body>
-</html>
