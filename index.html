@@ -30,15 +30,15 @@
     }
 
     async function init() {
-        const data = await d3.csv('https://flunky.github.io/cars2017.csv').
-        then(function(data) {
-          data.forEach(function(d) {
-            d.AverageHighwayMPG = +d.AverageHighwayMPG;
-            d.AverageCityMPG =  +d.AverageCityMPG;
-            d.EngineCylinders = +d.EngineCylinders;
-          });
-        });
-    }
+    const data = await d3.csv('https://flunky.github.io/cars2017.csv').
+    then(function(data) {
+      data.forEach(function(d) {
+        d.AverageHighwayMPG = +d.AverageHighwayMPG;
+        d.AverageCityMPG =  +d.AverageCityMPG;
+        d.EngineCylinders = +d.EngineCylinders;
+      });
+    });
+ 
     var width = 960,
         height = 500,
         padding = 1.5, // separation between same-color nodes
@@ -182,6 +182,7 @@
         }
         return false;
     };    
+    }
   </script>
 
   
