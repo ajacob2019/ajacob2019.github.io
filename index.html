@@ -17,9 +17,14 @@
     circle {fill: lightblue; stroke: black;}
  
   </style>
+  
 </head>
 
 <body onload='init()'>
+  <div id="story-buttons" class="btn-group" role="group" aria-label="questions to be answered">
+  <button id="thunder" type="button" class="btn btn-default" onClick="dispatchButton('thunder');">Thunder</button>
+  <button id="lightning" type="button" class="btn btn-default" onClick="dispatchButton('lightning');">Lightning</button>
+  <button id="hail" type="button" class="btn btn-default" onClick="dispatchButton('hail');">Hail</button>
 <svg width=500 height=500>
 </svg>
   <script>
@@ -41,7 +46,7 @@
            .data(csvdata)
            .enter()
            .append('circle')
-           .attr('cx', function(d, i){return i;})        
+           .attr('cx', function(d, i){return i*2;})        
            .attr('cy', function(d, i){return d.AverageHighwayMPG;})          
            .attr('r', function(d, i){return  2 ;});
 
@@ -59,10 +64,7 @@
     }
     
   </script>
-  <div id="story-buttons" class="btn-group" role="group" aria-label="questions to be answered">
-  <button id="thunder" type="button" class="btn btn-default" onClick="dispatchButton('thunder');">Thunder</button>
-  <button id="lightning" type="button" class="btn btn-default" onClick="dispatchButton('lightning');">Lightning</button>
-  <button id="hail" type="button" class="btn btn-default" onClick="dispatchButton('hail');">Hail</button>
+
   
 </div>
    <div id="commentary" > </div>
