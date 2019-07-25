@@ -33,7 +33,7 @@
         sx = d3.scaleLog().base(10).domain([10,150]).range([0,200]);
         sy = d3.scaleLog().base(10).domain([10,150]).range([200,0]);
         x = d3.scaleLinear().domain([0,200]).range([0, 200]);
-        y = d3.scaleLinear().domain([200,0]).range([200, 0]);
+        y = d3.scaleLinear().domain([0,200]).range([200, 0]);
 
          d3.select('svg')
            .append('g').attr('transform','translate(50,50)')
