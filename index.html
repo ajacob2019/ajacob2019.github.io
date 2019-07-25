@@ -30,7 +30,7 @@
     }
 
 
-    d3.text("https://flunky.github.io/cars2017.csv", function(error, text) {
+    d3.csv("https://flunky.github.io/cars2017.csv", function(error, text) {
     if (error) throw error;
     var colNames = "Make,Fuel,EngineCylinders,AverageHighwayMPG,AverageCityMPG\n" + text;
     var data = d3.csv.parse(colNames);
