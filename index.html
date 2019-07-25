@@ -33,7 +33,7 @@
         sx = d3.scaleLog().base(10).domain([10,150]).range([0,200]);
         sy = d3.scaleLog().base(10).domain([10,150]).range([200,0]);
         x = d3.scaleLog().domain([10,150]).range([0, 200]);
-        y = d3.scaleLog).domain([10,150]).range([200, 0]);
+        y = d3.scaleLog().domain([10,150]).range([200, 0]);
 
          d3.select('svg')
            .append('g').attr('transform','translate(50,50)')
@@ -41,9 +41,9 @@
            .data(csvdata)
            .enter()
            .append('circle')
-           .attr('cx', function(d, i){return i;})        
+           .attr('cx', function(d, i){return sx(d.AverageCityMPG);})        
            .attr('cy', function(d, i){return sy(d.AverageHighwayMPG);})          
-           .attr('r', function(d, i){return  2;});
+           .attr('r', function(d, i){return  2 + parseInt(d.EngineCylinders);});
 
         d3.select('svg').
             append('g')
@@ -58,7 +58,7 @@
             .call(d3.axisBottom(x)
                  .tickValues([10,20,50,100])
                  .tickFormat(d3.format("~s"))
-            ); 
+            );
     
     }
     
