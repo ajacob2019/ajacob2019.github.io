@@ -41,9 +41,9 @@
            .data(csvdata)
            .enter()
            .append('circle')
-           .attr('cx', function(d, i){return sx(d.AverageCityMPG);})        
+           .attr('cx', function(d, i){return i;})        
            .attr('cy', function(d, i){return sy(d.AverageHighwayMPG);})          
-           .attr('r', function(d, i){return  2 + parseInt(d.EngineCylinders);});
+           .attr('r', function(d, i){return  2 ;});
 
         d3.select('svg').
             append('g')
