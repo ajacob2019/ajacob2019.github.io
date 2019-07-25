@@ -30,15 +30,20 @@
     }
 
     async function init() {
+    var cs = [];
     const data = await d3.csv('https://flunky.github.io/cars2017.csv').
     then(function(data) {
       data.forEach(function(d) {
         d.AverageHighwayMPG = +d.AverageHighwayMPG;
         d.AverageCityMPG =  +d.AverageCityMPG;
         d.EngineCylinders = +d.EngineCylinders;
+        if(!cs.contains(d.Fuel)) {
+           cs.push(d.Fuel);
+        }
       });
     });
- 
+
+    
     var width = 960,
         height = 500,
         padding = 1.5, // separation between same-color nodes
@@ -52,12 +57,12 @@
 
 
     //unique cluster/Fuel id's
-    var cs = [];
-    data.forEach(function(d){
-            if(!cs.contains(d.Fuel)) {
-                cs.push(d.Fuel);
-            }
-    });
+    //var cs = [];
+    //data.forEach(function(d){
+    //        if(!cs.contains(d.Fuel)) {
+    //            cs.push(d.Fuel);
+    //        }
+   // });
 
     var n = data.length, // total number of nodes
         m = cs.length; // number of distinct clusters
