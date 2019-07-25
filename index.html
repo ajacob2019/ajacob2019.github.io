@@ -18,7 +18,7 @@
   
 </head>
 
-<body onload='init()'>
+<body >
   <div id="story-buttons" class="btn-group" role="group" aria-label="questions to be answered">
   <button id="Gasoline" type="button" class="btn btn-default" onClick="dispatchButton('Gasoline');">Gasoline</button>
   <button id="Diesel" type="button" class="btn btn-default" onClick="dispatchButton('Diesel');">Diesel</button>
@@ -29,20 +29,15 @@
          d3.select("#commentary").text("You selected " + source);
     }
 
-    async function init() {
-    var cs = [];
-    const data = await d3.csv('https://flunky.github.io/cars2017.csv').
-    then(function(data) {
-      data.forEach(function(d) {
-        d.AverageHighwayMPG = +d.AverageHighwayMPG;
-        d.AverageCityMPG =  +d.AverageCityMPG;
-        d.EngineCylinders = +d.EngineCylinders;
-        if(!cs.indexOf(d.Fuel)) {
-           cs.push(d.Fuel);
-        }
-      });
-    });
 
+    d3.text("https://flunky.github.io/cars2017.csv", function(error, text) {
+    if (error) throw error;
+    var colNames = "Make,Fuel,EngineCylinders,AverageHighwayMPG,AverageCityMPG\n" + text;
+    var data = d3.csv.parse(colNames);
+
+    data.forEach(function(d) {
+    d.EngineCylinders = +d.EngineCylinders;
+    });
     
     var width = 960,
         height = 500,
@@ -54,15 +49,13 @@
           .range(["#7A99AC", "#E4002B", "#565352"]);
 
 
-
-
     //unique cluster/Fuel id's
-    //var cs = [];
-    //data.forEach(function(d){
-    //        if(!cs.contains(d.Fuel)) {
-    //            cs.push(d.Fuel);
-    //        }
-   // });
+    var cs = [];
+    data.forEach(function(d){
+       if(!cs.indexOf(d.Fuel)) {
+          cs.push(d.Fuel);
+        }
+    });
 
     var n = data.length, // total number of nodes
         m = cs.length; // number of distinct clusters
@@ -180,7 +173,7 @@
         };
     }
 
-
+    });
     Array.prototype.contains = function(v) {
         for(var i = 0; i < this.length; i++) {
             if(this[i] === v) return true;
