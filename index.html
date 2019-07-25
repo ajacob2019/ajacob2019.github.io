@@ -23,9 +23,7 @@
   <button id="Gasoline" type="button" class="btn btn-default" onClick="dispatchButton('Gasoline');">Gasoline</button>
   <button id="Diesel" type="button" class="btn btn-default" onClick="dispatchButton('Diesel');">Diesel</button>
   <button id="Electric" type="button" class="btn btn-default" onClick="dispatchButton('Electric');">Electric</button>
-<svg width=500 height=500>
-</svg>
-  <script>
+<script>
  
     function  dispatchButton(source) {
          d3.select("#commentary").text("You selected " + source);
@@ -176,7 +174,7 @@
             });
         };
     }
-    });
+
 
     Array.prototype.contains = function(v) {
         for(var i = 0; i < this.length; i++) {
