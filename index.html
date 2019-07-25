@@ -37,7 +37,7 @@
         d.AverageHighwayMPG = +d.AverageHighwayMPG;
         d.AverageCityMPG =  +d.AverageCityMPG;
         d.EngineCylinders = +d.EngineCylinders;
-        if(!cs.contains(d.Fuel)) {
+        if(!cs.indexOf(d.Fuel)) {
            cs.push(d.Fuel);
         }
       });
