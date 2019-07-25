@@ -42,8 +42,8 @@
            .enter()
            .append('circle')
            .attr('cx', function(d, i){return i;})        
-           .attr('cy', function(d, i){return d.AverageHighwayMPG;})          
-           .attr('r', function(d, i){return  4;});
+           .attr('cy', function(d, i){return sy(d.AverageHighwayMPG);})          
+           .attr('r', function(d, i){return  2;});
 
         d3.select('svg').
             append('g')
