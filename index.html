@@ -249,8 +249,8 @@
             y = d3.scaleLinear().domain([0,42]).range([200, 0]);
             d3.select("svg").selectAll("*").remove();
             d3.select('svg')
-            .attr('width', width + 3*margin.left)
-            .attr('height',height + 3*margin.bottom)
+            .attr('width', width + 4*margin.left)
+            .attr('height',height + 4*margin.bottom)
             .append('g').attr('transform','translate(50,50)')
             .selectAll('rect')
             .data(data1)
