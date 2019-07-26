@@ -144,7 +144,10 @@
 		This script generates sample text for the body content.
 		You can remove this script and any reference to it.
 		 ============================= */
-        var bodyText="The most important moment of your life is now.The most important person in your life is the one you are with now, and the most important activity in your life is the one you are involved with now.";
+        var bodyTextAll="  Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Acura has a highest milage amoung all auto maker";
+        var bodyTextGasoline="Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Acura has a highest milage amoung in gasoline auto maker";
+        var bodyTextDiesel="Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Acura has a highest milage amoung in Diesel auto maker";
+        var bodyTextElectric="Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Tesla has a highest milage amoung in electric auto maker";
         function generateText(sentenceCount){
         /*for (var i=0; i<sentenceCount; i++)
         document.write(bodyText[Math.floor(Math.random()*7)]+" ") */
@@ -169,15 +172,15 @@
         function  dispatchButton(source) {
             if(source === 'All'){
                 dataToChart = csvdata;
-                d3.select("#content-text").html('<h4>All Data</h4><br>'+bodyText);
+                d3.select("#content-text").html('<h4>All Data</h4><br>'+bodyTextAll);
             }else if(source === 'Gasoline'){
-                    d3.select("#content-text").html('<h4>Gasoline Data</h4><br>'+bodyText);
+                    d3.select("#content-text").html('<h4>Gasoline Data</h4><br>'+bodyTextGasoline);
                 dataToChart = gasolineData;
             }else if(source === 'Diesel'){
-                    d3.select("#content-text").html('<h4>Diesel Data</h4><br>'+bodyText);
+                    d3.select("#content-text").html('<h4>Diesel Data</h4><br>'+bodyTextDiesel);
                 dataToChart = dieselData;
             } else if (source === 'Electric'){
-                    d3.select("#content-text").html('<h4>Electric Data</h4><br>'+bodyText);
+                    d3.select("#content-text").html('<h4>Electric Data</h4><br>'+bodyTextElectric);
                 dataToChart = electricityData;
             }
             var highwayMPGStyle= d3.select("#HighwayMPG").style("background");
