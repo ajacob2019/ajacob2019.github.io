@@ -253,7 +253,7 @@
             .attr('height',height + 4*margin.bottom)
             .append('g').attr('transform','translate(50,50)')
             .selectAll('rect')
-            .data(data1)
+            .data(data)
             .enter()
             .append('rect')
             .attr("width",19)
@@ -261,8 +261,8 @@
             .attr('height', 20)
             .attr('y', 400)
             .transition().duration(1000)
-            .attr('height', function(d,i) {return 10*d})
-            .attr('y',function(d,i) {return(420- 10*d);});
+            .attr('height', function(d,i) {return 10*d.AverageHighwayMPG})
+            .attr('y',function(d,i) {return(420- 10*d.AverageHighwayMPG);});
             d3.select('svg').
             append('g')
             .attr('transform','translate(50,50)')
