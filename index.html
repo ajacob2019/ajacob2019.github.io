@@ -134,144 +134,138 @@
 	</style>
 
 	<script type="text/javascript">
-	var csvdata=[];
-	var gasolineData=[];
-	var electricityData=[];
-	var dieselData=[];
-	var dataToChart=[];
-	var buble= true;
+        var csvdata=[];
+        var gasolineData=[];
+        var electricityData=[];
+        var dieselData=[];
+        var dataToChart=[];
+        var buble= true;
 		/* =============================
 		This script generates sample text for the body content.
 		You can remove this script and any reference to it.
 		 ============================= */
-		var bodyText="The most important moment of your life is now.The most important person in your life is the one you are with now, and the most important activity in your life is the one you are involved with now.";
-		function generateText(sentenceCount){
-			/*for (var i=0; i<sentenceCount; i++)
-			document.write(bodyText[Math.floor(Math.random()*7)]+" ") */
-		}
-		 function  dispatchButton(source) {
-			 		if(source === 'All'){
-						dataToChart = csvdata;
-						d3.select("#content-text").html('<h4>All Data</h4><br>'+bodyText);
-					}else if(source === 'Gasoline'){
-							d3.select("#content-text").html('<h4>Gasoline Data</h4><br>'+bodyText);
-						dataToChart = gasolineData;
-					}else if(source === 'Diesel'){
-							d3.select("#content-text").html('<h4>Diesel Data</h4><br>'+bodyText);
-						dataToChart = dieselData;
-					} else if (source === 'Electric'){
-							d3.select("#content-text").html('<h4>Electric Data</h4><br>'+bodyText);
-						dataToChart = electricityData;
-					}
-        	var highwayMPGStyle= d3.select("#HighwayMPG").style("background");
-					var cityMPGStyle= d3.select("#CityMPG").style("background");
-					if(highwayMPGStyle.includes('rgb(255, 255, 255)') && cityMPGStyle.includes('rgb(255, 255, 255)')){
-						d3.select("#HighwayMPG").style("background", 'rgb(173, 216, 230)');
-					}
-					else{
-						d3.select("#HighwayMPG").style("background", cityMPGStyle);
-						d3.select("#CityMPG").style("background", highwayMPGStyle);
-					}
+        var bodyText="The most important moment of your life is now.The most important person in your life is the one you are with now, and the most important activity in your life is the one you are involved with now.";
+        function generateText(sentenceCount){
+        /*for (var i=0; i<sentenceCount; i++)
+        document.write(bodyText[Math.floor(Math.random()*7)]+" ") */
+        }
+        async function init() {
+            csvdata = await d3.csv('https://flunky.github.io/cars2017.csv');
+            for (var i = 0; i < csvdata.length; i++) {
+                var data = csvdata[i];
 
-					if(buble){
-						bubleChart(dataToChart);
-					}
-					else{
-						barChart(dataToChart);
-					}
-    }
+                if(data.Fuel === "Gasoline"){
+                    gasolineData.push(data);
+                } else if(data.Fuel === "Electricity"){
+                        electricityData.push(data);
+                }else if (data.Fuel === "Diesel") {
+                    dieselData.push(data);
+                }
+            }
+            console.log('Gasoline data count', gasolineData.length);
+            console.log('diesel data count', dieselData.length);
+            console.log('Electricity data count', electricityData.length);
+        }
+        function  dispatchButton(source) {
+            if(source === 'All'){
+                dataToChart = csvdata;
+                d3.select("#content-text").html('<h4>All Data</h4><br>'+bodyText);
+            }else if(source === 'Gasoline'){
+                    d3.select("#content-text").html('<h4>Gasoline Data</h4><br>'+bodyText);
+                dataToChart = gasolineData;
+            }else if(source === 'Diesel'){
+                    d3.select("#content-text").html('<h4>Diesel Data</h4><br>'+bodyText);
+                dataToChart = dieselData;
+            } else if (source === 'Electric'){
+                    d3.select("#content-text").html('<h4>Electric Data</h4><br>'+bodyText);
+                dataToChart = electricityData;
+            }
+            var highwayMPGStyle= d3.select("#HighwayMPG").style("background");
+            var cityMPGStyle= d3.select("#CityMPG").style("background");
+            if(highwayMPGStyle.includes('rgb(255, 255, 255)') && cityMPGStyle.includes('rgb(255, 255, 255)')){
+                d3.select("#HighwayMPG").style("background", 'rgb(173, 216, 230)');
+            }
+            else{
+                d3.select("#HighwayMPG").style("background", cityMPGStyle);
+                d3.select("#CityMPG").style("background", highwayMPGStyle);
+            }
+
+            if(buble){
+                bubleChart(dataToChart);
+            }
+            else{
+                barChart(dataToChart);
+            }
+        }
 		function dispatchClear(){
-				d3.select("svg").selectAll("*").remove();
+			d3.select("svg").selectAll("*").remove();
 		}
 
-    async function init() {
-        csvdata = await d3.csv('https://flunky.github.io/cars2017.csv');
-				for (var i = 0; i < csvdata.length; i++) {
-					var data = csvdata[i];
+        function bubleChart(data){
+            buble=!buble;
+            sx = d3.scaleLog().base(10).domain([10,150]).range([0,200]);
+            sy = d3.scaleLog().base(10).domain([10,150]).range([200,0]);
+            x = d3.scaleLinear().domain([0,400]).range([0, 400]);
+            y = d3.scaleLinear().domain([0,400]).range([400, 0]);
+                d3.select("svg").selectAll("*").remove();
+            d3.select('svg')
+            .append('g').attr('transform','translate(50,50)')
+            .selectAll('circle')
+            .data(data)
+            .enter()
+            .append('circle')
+            .attr('cx', function(d, i){return i*2;})
+            .attr('cy', function(d, i){return d.AverageHighwayMPG;})
+            .attr('r', function(d, i){return  2 ;});
 
-					if(data.Fuel === "Gasoline"){
-						gasolineData.push(data);
-					} else if(data.Fuel === "Electricity"){
-							electricityData.push(data);
-					}else if (data.Fuel === "diesel") {
-						dieselData.push(data);
-					}
-
-				}
-				console.log('Gasoline data count', gasolineData.length);
-				console.log('diesel data count', dieselData.length);
-				console.log('Electricity data count', electricityData.length);
-			}
-
-			function bubleChart(data){
-				buble=!buble;
-        sx = d3.scaleLog().base(10).domain([10,150]).range([0,200]);
-        sy = d3.scaleLog().base(10).domain([10,150]).range([200,0]);
-        x = d3.scaleLinear().domain([0,400]).range([0, 400]);
-        y = d3.scaleLinear().domain([0,400]).range([400, 0]);
-				d3.select("svg").selectAll("*").remove();
-         d3.select('svg')
-           .append('g').attr('transform','translate(50,50)')
-           .selectAll('circle')
-           .data(data)
-           .enter()
-           .append('circle')
-           .attr('cx', function(d, i){return i*2;})
-           .attr('cy', function(d, i){return d.AverageHighwayMPG;})
-           .attr('r', function(d, i){return  2 ;});
-
-        d3.select('svg').
+            d3.select('svg').
             append('g')
             .attr('transform','translate(50,50)')
             .call(d3.axisLeft(y)
             );
-         d3.select('svg')
+            d3.select('svg')
             .append('g')
             .attr('transform','translate(50,450)')
             .call(d3.axisBottom(x)
             );
+        }
 
+        function barChart(data){
 
-           // barChart();
+            buble=!buble;
+            //d3.select("#barChartDiv").style("display", 'inline-block');
+            //d3.select("#bubleChartDiv").style("display", 'inline-block');
+            var data1 = [4,8,15,16,23,42];
 
-    }
+            var margin = {top: 0, right: 0, bottom: 50, left: 50},
+            width  = 500 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
 
-    function barChart(data){
+            x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0,200]);
+            y = d3.scaleLinear().domain([0,42]).range([200, 0]);
+            d3.select("svg").selectAll("*").remove();
+            d3.select('svg')
+            .attr('width', width + 3*margin.left)
+            .attr('height',height + 3*margin.bottom)
+            .append('g').attr('transform','translate(50,50)')
+            .selectAll('rect')
+            .data(data1)
+            .enter()
+            .append('rect')
+            .attr('x',function(d,i){return x(i);})
+            .attr('y',function(d,i) {return y(d);})
+            .attr('width',x.bandwidth())
+            .attr('height', function(d,i) {return(200-y(d));});
+            d3.select('svg').
+            append('g')
+            .attr('transform','translate(50,50)')
+            .call(d3.axisLeft(y));
+            d3.select('svg')
+            .append('g')
+            .attr('transform','translate(50,250)')
+            .call(d3.axisBottom(x));
 
-			buble=!buble;
-			//d3.select("#barChartDiv").style("display", 'inline-block');
-			//d3.select("#bubleChartDiv").style("display", 'inline-block');
-     var data1 = [4,8,15,16,23,42];
-
-    var margin = {top: 0, right: 0, bottom: 50, left: 50},
-    width  = 500 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
-
-x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0,200]);
-y = d3.scaleLinear().domain([0,42]).range([200, 0]);
-d3.select("svg").selectAll("*").remove();
-d3.select('svg')
-  .attr('width', width + 3*margin.left)
-  .attr('height',height + 3*margin.bottom)
-  .append('g').attr('transform','translate(50,50)')
-  .selectAll('rect')
-  .data(data1)
-  .enter()
-  .append('rect')
-    .attr('x',function(d,i){return x(i);})
-    .attr('y',function(d,i) {return y(d);})
-    .attr('width',x.bandwidth())
-    .attr('height', function(d,i) {return(200-y(d));});
- d3.select('svg').
-    append('g')
-    .attr('transform','translate(50,50)')
-    .call(d3.axisLeft(y));
- d3.select('svg')
-    .append('g')
-    .attr('transform','translate(50,250)')
-    .call(d3.axisBottom(x));
-
-    }
+        }
 	</script>
 </head>
 
