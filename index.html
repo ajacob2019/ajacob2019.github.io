@@ -9,7 +9,7 @@
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-	<title>3 Column Layout</title>
+	<title>3 Mileage Analysis</title>
 	<style type="text/css">
 
 		/* Layout */
@@ -129,6 +129,19 @@
 
     #story-buttons {margin-left: 40px; margin-top:40px}
     #commentary {margin-top: 100px;left:120px;font-size:36pt; font-family: "monospace";text-align:center;}
+    #tooltip {
+        opacity: 0;
+        position: absolute;			
+        text-align: center;			
+        width: 100px;					
+        height: 60px;					
+        padding: 2px;				
+        font: 12px sans-serif;		
+        background: lightgreen;	
+        border: 0px;		
+        border-radius: 8px;			
+        pointer-events: none;	
+    }
     circle {fill: lightblue; stroke: black;}
     rect {fill: lightblue; stroke: black; }
 
@@ -149,6 +162,10 @@
         var bodyTextGasoline="Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Acura has a highest milage amoung in gasoline auto maker";
         var bodyTextDiesel="Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Acura has a highest milage amoung in Diesel auto maker";
         var bodyTextElectric="Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Tesla has a highest milage amoung in electric auto maker";
+        // Define the div for the tooltip
+        var div = d3.select("body").append("div")	
+                .attr("class", "tooltip")				
+                .style("opacity", 0);
         function generateText(sentenceCount){
         /*for (var i=0; i<sentenceCount; i++)
         document.write(bodyText[Math.floor(Math.random()*7)]+" ") */
@@ -233,20 +250,46 @@
             .call(d3.axisBottom(x)
             );
         }
+        function barChartToolTips(data){
 
+            buble=!buble;
+            var width = 120, height = 300;
+
+            var data1 = [4,8,15,16,23,42];
+
+            var x = d3.scaleLinear().domain([0,6]).range([0,width]);
+            var y = d3.scaleLinear().domain([0,42]).range([height,0]);
+            var tooltip = d3.select("#tooltip");
+            d3.select("svg").selectAll("*").remove();
+            d3.select('svg')
+                .attr("width",width)
+                .attr("height",height)
+                .selectAll("rect")
+                .data(data1)
+                .enter().append("rect")
+                .attr("width",19)
+                .attr("height",function(d) { return height - y(d); })
+                .attr("x",function(d,i) { return x(i); })
+                .attr("y",function(d) { return y(d); })
+                .on("mouseover", function(d,i) {
+                    tooltip.style("opacity", 1)
+                           .style("left",(d3.event.pageX)+"px")
+                           .style("top",(d3.event.pageY)+"px")
+                           .html("Item #"+i+" is "+d);
+                })
+                .on("mouseout", function() { tooltip.style("opacity", 0) })
+
+        }
         function barChart(data){
 
             buble=!buble;
-            //d3.select("#barChartDiv").style("display", 'inline-block');
-            //d3.select("#bubleChartDiv").style("display", 'inline-block');
-            var data1 = [4,8,15,16,23,42];
 
+            var tooltip = d3.select("#tooltip");
             var margin = {top: 0, right: 0, bottom: 50, left: 50},
-            width  = 120 - margin.left - margin.right,
+            width  = 500 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
-
             x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0,200]);
-            y = d3.scaleLinear().domain([0,42]).range([200, 0]);
+            y = d3.scaleLinear().domain([0,42]).range([420, 0]);
             d3.select("svg").selectAll("*").remove();
             d3.select('svg')
             .attr('width', width + 4*margin.left)
@@ -256,8 +299,54 @@
             .data(data)
             .enter()
             .append('rect')
-            .attr("width",19)
-            .attr('x',function(d,i){return 20 *i;})
+             .attr("width",35) // width of a bar chart
+            .attr('x',function(d,i){return 35 *i;})
+            .attr('height', 20)
+            .attr('y', 400)
+            .on("mouseover", function(d,i) {
+                var mileage = d.AverageCityMPG;
+                tooltip.style("opacity", 1)
+                .style("left",(d3.event.pageX - 200)+"px")
+                .style("top",(d3.event.pageY - 100)+"px")
+                .html("Make:"+d.Make+"\n"+ "Cylinder:"+d.EngineCylinders + "\n"+ "Mileage:"+ mileage );
+            })
+            .on("mouseout", function() { tooltip.style("opacity", 0) })
+            .transition().duration(1000)
+            .attr('height', function(d,i) {return 10*d.AverageHighwayMPG})
+            .attr('y',function(d,i) {return(420- 10*d.AverageHighwayMPG);});
+            d3.select('svg').
+            append('g')
+            .attr('transform','translate(50,50)')
+            .call(d3.axisLeft(y));
+            d3.select('svg')
+            .append('g')
+            .attr('transform','translate(50,470)')
+            .call(d3.axisBottom(x));
+
+        }
+        function barChart1(data){
+
+            buble=!buble;
+            //d3.select("#barChartDiv").style("display", 'inline-block');
+            //d3.select("#bubleChartDiv").style("display", 'inline-block');
+            var data1 = [4,8,15,16,23,42];
+
+            var margin = {top: 0, right: 0, bottom: 50, left: 50},
+            width  = 500 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+            x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0,200]);
+            y = d3.scaleLinear().domain([0,42]).range([420, 0]);
+            d3.select("svg").selectAll("*").remove();
+            d3.select('svg')
+            .attr('width', width + 4*margin.left)
+            .attr('height',height + 4*margin.bottom)
+            .append('g').attr('transform','translate(50,50)')
+            .selectAll('rect')
+            .data(data)
+            .enter()
+            .append('rect')
+             .attr("width",35) // width of a bar chart
+            .attr('x',function(d,i){return 35 *i;})
             .attr('height', 20)
             .attr('y', 400)
             .transition().duration(1000)
@@ -269,7 +358,7 @@
             .call(d3.axisLeft(y));
             d3.select('svg')
             .append('g')
-            .attr('transform','translate(50,250)')
+            .attr('transform','translate(50,470)')
             .call(d3.axisBottom(x));
 
         }
@@ -279,7 +368,7 @@
 <body onload='init()'>
 
 	<header id="header" style="font-family: serif;font-size: 40px;padding-top:.5em;padding-bottom:0"><p>Mileage Analysis For Automotive Makers</p></header>
-	<div id="container">
+    <div id="container">
 
 		<main id="center" class="column" style="background-color: rgb(240, 240, 240);">
 			<article style="padding-left: 10em">
@@ -287,15 +376,17 @@
 				<!--svg width=500 height=700></svg -->
 				<!--style> rect {fill: lightblue; stroke: black; }</style -->
 				<div id="barChartDiv">
-				   <svg width=120 height=500>
+				   <svg width=500 height=500>
 			   	</svg>
 		  	</div>
+            <div id="tooltip"></div>
 				<!--div id="bubleChartDiv" style="display:none">
 				   <svg width=500 height=500>
 			   	</svg>
 		  	</div -->
 
 			<div id="" role="group" class="btn-group" >
+            
 
 			<button id="HighwayMPG" type="button" class="">HighwayMPG</button>
          	<button id="CityMPG"  type="button" class="">CityMPG</button>
@@ -310,6 +401,7 @@
   	<button id="Gasoline" type="button" class="btn btn-default" onClick="dispatchButton('Gasoline');">Gasoline</button>
   	<button id="Diesel" type="button" class="btn btn-default" onClick="dispatchButton('Diesel');">Diesel</button>
   	<button id="Electric" type="button" class="btn btn-default" onClick="dispatchButton('Electric');">Electric</button>
+
  	</div>
 			<ul>
 				<li>
