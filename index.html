@@ -5,6 +5,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <!-- Load d3-annotation -->
+  <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
   <!-- Bootstrap -->
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -19,8 +21,8 @@
 
 		#container {
 			padding-left: 200px;
-			padding-right: 190px;
-			height:50em;
+			padding-right: 100px;
+			height:43em;
 		}
 
 		#container .column {
@@ -154,6 +156,8 @@
         var dieselData=[];
         var dataToChart=[];
         var buble= true;
+        var highway_city = 'Highway';
+        var sel = 'All';
 		/* =============================
 		This script generates sample text for the body content.
 		You can remove this script and any reference to it.
@@ -183,23 +187,45 @@
                     dieselData.push(data);
                 }
             }
+            function compareByThird(a, b) {
+                a = a + '';
+                b = b + '';
+                var aArr = a.split(',');
+                var bArr = b.split(',');
+                if (aArr[3] < bArr[3]) {
+                    return -1;
+                } else if (aArr[3] > bArr[3]) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+
+            //dieselData.sort(compareByThird);
+            
             console.log('Gasoline data count', gasolineData.length);
             console.log('diesel data count', dieselData.length);
             console.log('Electricity data count', electricityData.length);
+           // console.log(dieselData.sort(compareByThird));
+           dispatchButton('All');
         }
         function  dispatchButton(source) {
             if(source === 'All'){
                 dataToChart = csvdata;
+                sel = 'All';
                 d3.select("#content-text").html('<h4>All Data</h4><br>'+bodyTextAll);
             }else if(source === 'Gasoline'){
                     d3.select("#content-text").html('<h4>Gasoline Data</h4><br>'+bodyTextGasoline);
                 dataToChart = gasolineData;
+                sel = 'Gasoline';
             }else if(source === 'Diesel'){
                     d3.select("#content-text").html('<h4>Diesel Data</h4><br>'+bodyTextDiesel);
                 dataToChart = dieselData;
+                sel = 'Diesel';
             } else if (source === 'Electric'){
                     d3.select("#content-text").html('<h4>Electric Data</h4><br>'+bodyTextElectric);
                 dataToChart = electricityData;
+                sel = 'Electric';
             }
             var highwayMPGStyle= d3.select("#HighwayMPG").style("background");
             var cityMPGStyle= d3.select("#CityMPG").style("background");
@@ -210,16 +236,24 @@
                 d3.select("#HighwayMPG").style("background", cityMPGStyle);
                 d3.select("#CityMPG").style("background", highwayMPGStyle);
             }
-
-            if(buble){
-                bubleChart(dataToChart);
-            }
-            else{
-                barChart(dieselData);
-            }
+            barChart(dataToChart);
+            //if(buble){
+              //  bubleChart(dataToChart);
+            //}
+            //else{
+                //barChart(dieselData);
+            //}
         }
-		function dispatchClear(){
+		function dispatchHighway_City(src){
 			d3.select("svg").selectAll("*").remove();
+            if(src === 'Highway')
+            {
+                highway_city = 'Highway';
+            }else{
+                highway_city = 'City';
+            }
+            barChart(dataToChart);
+            
 		}
 
         function bubleChart(data){
@@ -250,46 +284,19 @@
             .call(d3.axisBottom(x)
             );
         }
-        function barChartToolTips(data){
-
-            buble=!buble;
-            var width = 120, height = 300;
-
-            var data1 = [4,8,15,16,23,42];
-
-            var x = d3.scaleLinear().domain([0,6]).range([0,width]);
-            var y = d3.scaleLinear().domain([0,42]).range([height,0]);
-            var tooltip = d3.select("#tooltip");
-            d3.select("svg").selectAll("*").remove();
-            d3.select('svg')
-                .attr("width",width)
-                .attr("height",height)
-                .selectAll("rect")
-                .data(data1)
-                .enter().append("rect")
-                .attr("width",19)
-                .attr("height",function(d) { return height - y(d); })
-                .attr("x",function(d,i) { return x(i); })
-                .attr("y",function(d) { return y(d); })
-                .on("mouseover", function(d,i) {
-                    tooltip.style("opacity", 1)
-                           .style("left",(d3.event.pageX)+"px")
-                           .style("top",(d3.event.pageY)+"px")
-                           .html("Item #"+i+" is "+d);
-                })
-                .on("mouseout", function() { tooltip.style("opacity", 0) })
-
-        }
         function barChart(data){
 
-            buble=!buble;
-
             var tooltip = d3.select("#tooltip");
-            var margin = {top: 0, right: 0, bottom: 50, left: 50},
-            width  = 500 - margin.left - margin.right,
+            
+            var margin = {top: 0, right: 0, bottom: 10, left: 50},
+            width  = 1000 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
-            x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0,200]);
-            y = d3.scaleLinear().domain([0,42]).range([420, 0]);
+            //x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0,200]);
+            yh = d3.scaleLinear().domain([0,150]).range([0, 500]);
+            yc = d3.scaleLinear().domain([0,170]).range([0, 500]);
+            yGD = d3.scaleLinear().domain([0,80]).range([0, 500]);
+            var ySH = yh;
+            var ySC = yc;
             d3.select("svg").selectAll("*").remove();
             d3.select('svg')
             .attr('width', width + 4*margin.left)
@@ -299,12 +306,41 @@
             .data(data)
             .enter()
             .append('rect')
-             .attr("width",35) // width of a bar chart
-            .attr('x',function(d,i){return 35 *i;})
+            //.attr("width",6) // width of a bar chart
+            .attr("width",function(d,i){
+                if (sel === 'All'){
+                    return 7 ;
+                }else if(sel === 'Gasoline'){
+                    ySH = yGD;
+                    ySC = yGD;
+                    return 7 ;
+                }else if(sel === 'Diesel'){
+                    ySH = yGD;
+                    ySC = yGD;
+                    return 12 ;
+                }
+                else{
+                    return  12;
+                }
+            })
+            .attr('x',function(d,i){
+                if (sel === 'All'){
+                     return 7 *i;
+                }else if(sel === 'Gasoline'){
+                    return 7 *i;
+                }
+                else{
+                    return  12*i;;
+                }
+            })
             .attr('height', 20)
             .attr('y', 400)
             .on("mouseover", function(d,i) {
-                var mileage = d.AverageCityMPG;
+               if (highway_city === 'City'){
+                  var mileage = d.AverageCityMPG;
+               }else{
+                 var mileage = d.AverageHighwayMPG;
+               }
                 tooltip.style("opacity", 1)
                 .style("left",(d3.event.pageX - 200)+"px")
                 .style("top",(d3.event.pageY - 100)+"px")
@@ -312,56 +348,32 @@
             })
             .on("mouseout", function() { tooltip.style("opacity", 0) })
             .transition().duration(1000)
-            .attr('height', function(d,i) {return 10*d.AverageHighwayMPG})
-            .attr('y',function(d,i) {return(420- 10*d.AverageHighwayMPG);});
-            d3.select('svg').
-            append('g')
-            .attr('transform','translate(50,50)')
-            .call(d3.axisLeft(y));
-            d3.select('svg')
-            .append('g')
-            .attr('transform','translate(50,470)')
-            .call(d3.axisBottom(x));
+            .attr('height', function(d,i) {
+                    if (highway_city === 'Highway'){
+                        return ySH(d.AverageHighwayMPG);
+                    }else{
+                        return ySC(d.AverageCityMPG);
+                    }
+             })
+            .attr('y',function(d,i) {
+                    if (highway_city === 'Highway'){
+                        return(420- ySH(d.AverageHighwayMPG));
+                    }else{
+                        return(420- ySC(d.AverageCityMPG));
+                    }
+                
+            });
+            //d3.select('svg').
+            //append('g')
+            ///.attr('transform','translate(50,50)')
+            //.call(d3.axisLeft(y));
+            //d3.select('svg')
+            //.append('g')
+            //.attr('transform','translate(50,470)')
+            //.call(d3.axisBottom(x));
 
         }
-        function barChart1(data){
 
-            buble=!buble;
-            //d3.select("#barChartDiv").style("display", 'inline-block');
-            //d3.select("#bubleChartDiv").style("display", 'inline-block');
-            var data1 = [4,8,15,16,23,42];
-
-            var margin = {top: 0, right: 0, bottom: 50, left: 50},
-            width  = 500 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
-            x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0,200]);
-            y = d3.scaleLinear().domain([0,42]).range([420, 0]);
-            d3.select("svg").selectAll("*").remove();
-            d3.select('svg')
-            .attr('width', width + 4*margin.left)
-            .attr('height',height + 4*margin.bottom)
-            .append('g').attr('transform','translate(50,50)')
-            .selectAll('rect')
-            .data(data)
-            .enter()
-            .append('rect')
-             .attr("width",35) // width of a bar chart
-            .attr('x',function(d,i){return 35 *i;})
-            .attr('height', 20)
-            .attr('y', 400)
-            .transition().duration(1000)
-            .attr('height', function(d,i) {return 10*d.AverageHighwayMPG})
-            .attr('y',function(d,i) {return(420- 10*d.AverageHighwayMPG);});
-            d3.select('svg').
-            append('g')
-            .attr('transform','translate(50,50)')
-            .call(d3.axisLeft(y));
-            d3.select('svg')
-            .append('g')
-            .attr('transform','translate(50,470)')
-            .call(d3.axisBottom(x));
-
-        }
 	</script>
 </head>
 
@@ -381,16 +393,16 @@
 		  	</div>
             <div id="tooltip"></div>
 				<!--div id="bubleChartDiv" style="display:none">
-				   <svg width=500 height=500>
+				   <svg width=800 height=600>
 			   	</svg>
 		  	</div -->
 
 			<div id="" role="group" class="btn-group" >
             
 
-			<button id="HighwayMPG" type="button" class="">HighwayMPG</button>
-         	<button id="CityMPG"  type="button" class="">CityMPG</button>
-         	<button id="Clear"  type="button" class="" onClick="dispatchClear('Clear');">Clear</button>
+			<button id="HighwayMPG" type="button" class="" onClick="dispatchHighway_City('Highway');">HighwayMPG</button>
+         	<button id="CityMPG"  type="button" class=""onClick="dispatchHighway_City('City');">CityMPG</button>
+         	<!--button id="Clear"  type="button" class="" onClick="dispatchClear('Clear');">Clear</button> -->
 			</div>
 			</article>
 		</main>
