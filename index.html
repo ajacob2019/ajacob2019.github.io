@@ -139,7 +139,7 @@
         height: 60px;					
         padding: 2px;				
         font: 12px sans-serif;		
-        background: lightgreen;	
+        background: #ABEBC6;	
         border: 0px;		
         border-radius: 8px;			
         pointer-events: none;	
@@ -147,6 +147,11 @@
     circle {fill: lightblue; stroke: black;}
     rect {fill: lightblue; stroke: black; }
 
+    .btn.active
+    {
+        color: #333;
+        background-color:red;
+    }
 	</style>
 
 	<script type="text/javascript">
@@ -497,8 +502,8 @@
             //setTimeout(insertAnnotation(max_x, max_y), 3000);
             //insertAnnotation(max_x, max_y);
             //insertAnnotation(min_x, min_y);
-            setTimeout(function(){ insertAnnotation(max_x, max_y, aDxMax, aDyMax,"Mileage Campion", aLabel_max); }, 800);
-            setTimeout(function(){ insertAnnotation(min_x, min_y, aDxMin, aDyMin,"Lowest Mileage", aLabel_min); }, 800);
+            setTimeout(function(){ insertAnnotation(max_x, max_y, aDxMax, aDyMax,"Mileage Campion", aLabel_max); }, 400);
+            setTimeout(function(){ insertAnnotation(min_x, min_y, aDxMin, aDyMin,"Lowest Mileage", aLabel_min); }, 400);
         }
 
         function insertAnnotation(aX, aY, aDx, aDy, aTitle, aLable){ 
