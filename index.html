@@ -22,7 +22,7 @@
 		#container {
 			padding-left: 200px;
 			padding-right: 100px;
-			height:44em;
+			height:45em;
 		}
 
 		#container .column {
@@ -32,7 +32,7 @@
 		}
 
 		#center {
-			padding: 10px 20px;
+			padding: 10px 10px;
 			width: 100%;
 		}
 
@@ -147,11 +147,6 @@
     circle {fill: lightblue; stroke: black;}
     rect {fill: lightblue; stroke: black; }
 
-    .btn.active
-    {
-        color: #333;
-        background-color:red;
-    }
 	</style>
 
 	<script type="text/javascript">
@@ -176,6 +171,7 @@
         var div = d3.select("body").append("div")	
                 .attr("class", "tooltip")				
                 .style("opacity", 0);
+        var orginalStyle= d3.select("#HighwayMPG").style("background");        
         function generateText(sentenceCount){
         /*for (var i=0; i<sentenceCount; i++)
         document.write(bodyText[Math.floor(Math.random()*7)]+" ") */
@@ -220,28 +216,46 @@
                 dataToChart = csvdata;
                 sel = 'All';
                 d3.select("#content-text").html('<h4>All Data</h4><br>'+bodyTextAll);
+                d3.select("#All").style("background", 'rgb(211, 211, 211)');
+                d3.select("#Gasoline").style("background", orginalStyle);
+                d3.select("#Diesel").style("background", orginalStyle);
+                d3.select("#Electric").style("background", orginalStyle);
             }else if(source === 'Gasoline'){
                     d3.select("#content-text").html('<h4>Gasoline Data</h4><br>'+bodyTextGasoline);
                 dataToChart = gasolineData;
                 sel = 'Gasoline';
+                d3.select("#All").style("background", orginalStyle);
+                d3.select("#Gasoline").style("background", 'rgb(211, 211, 211)');
+                d3.select("#Diesel").style("background", orginalStyle);
+                d3.select("#Electric").style("background", orginalStyle);
             }else if(source === 'Diesel'){
-                    d3.select("#content-text").html('<h4>Diesel Data</h4><br>'+bodyTextDiesel);
-                dataToChart = dieselData;
                 sel = 'Diesel';
+                d3.select("#content-text").html('<h4>Diesel Data</h4><br>'+bodyTextDiesel);
+                dataToChart = dieselData;
+                d3.select("#All").style("background", orginalStyle);
+                d3.select("#Gasoline").style("background", orginalStyle);
+                d3.select("#Diesel").style("background",'rgb(211, 211, 211)');
+                d3.select("#Electric").style("background", orginalStyle);
             } else if (source === 'Electric'){
-                    d3.select("#content-text").html('<h4>Electric Data</h4><br>'+bodyTextElectric);
-                dataToChart = electricityData;
                 sel = 'Electric';
+                d3.select("#content-text").html('<h4>Electric Data</h4><br>'+bodyTextElectric);
+                dataToChart = electricityData;
+                d3.select("#All").style("background", orginalStyle);
+                d3.select("#Gasoline").style("background", orginalStyle);
+                d3.select("#Diesel").style("background", orginalStyle);
+                d3.select("#Electric").style("background", 'rgb(211, 211, 211)');
+
             }
             var highwayMPGStyle= d3.select("#HighwayMPG").style("background");
             var cityMPGStyle= d3.select("#CityMPG").style("background");
             if(highwayMPGStyle.includes('rgb(255, 255, 255)') && cityMPGStyle.includes('rgb(255, 255, 255)')){
-                d3.select("#HighwayMPG").style("background", 'rgb(173, 216, 230)');
+                d3.select("#HighwayMPG").style("background", 'rgb(211, 211, 211)');
             }
             else{
                 d3.select("#HighwayMPG").style("background", cityMPGStyle);
                 d3.select("#CityMPG").style("background", highwayMPGStyle);
             }
+
             barChart(dataToChart);
             //if(buble){
               //  bubleChart(dataToChart);
@@ -558,7 +572,7 @@
 				<!--svg width=500 height=700></svg -->
 				<!--style> rect {fill: lightblue; stroke: black; }</style -->
 				<div id="barChartDiv">
-                <svg width="500" height="500" id="chart"></svg>
+                <svg width="600" height="600" id="chart"></svg>
 		  	</div>
             <div id="tooltip"></div>
 				<!--div id="bubleChartDiv" style="display:none">
@@ -569,8 +583,8 @@
 			<div id="" role="group" class="btn-group" >
             
 
-			<button id="HighwayMPG" type="button" class="" onClick="dispatchHighway_City('Highway');">HighwayMPG</button>
-         	<button id="CityMPG"  type="button" class=""onClick="dispatchHighway_City('City');">CityMPG</button>
+			<button id="HighwayMPG" type="button" class="btn btn-default" onClick="dispatchHighway_City('Highway');">HighwayMPG</button>
+         	<button id="CityMPG"  type="button" class="btn btn-default"onClick="dispatchHighway_City('City');">CityMPG</button>
          	<!--button id="Clear"  type="button" class="" onClick="dispatchClear('Clear');">Clear</button> -->
 			</div>
 			</article>
