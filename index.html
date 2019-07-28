@@ -22,7 +22,7 @@
 		#container {
 			padding-left: 200px;
 			padding-right: 100px;
-			height:43em;
+			height:44em;
 		}
 
 		#container .column {
@@ -158,6 +158,7 @@
         var buble= true;
         var highway_city = 'Highway';
         var sel = 'All';
+        
 		/* =============================
 		This script generates sample text for the body content.
 		You can remove this script and any reference to it.
@@ -290,13 +291,32 @@
             
             var margin = {top: 0, right: 0, bottom: 10, left: 50},
             width  = 1000 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+            height = 540 - margin.top - margin.bottom;
             //x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0,200]);
             yh = d3.scaleLinear().domain([0,150]).range([0, 500]);
             yc = d3.scaleLinear().domain([0,170]).range([0, 500]);
-            yGD = d3.scaleLinear().domain([0,80]).range([0, 500]);
+            yG = d3.scaleLinear().domain([0,80]).range([0, 500]);
+            yD = d3.scaleLinear().domain([0,50]).range([0, 500]);
+            var maxM = 0;
+            var minM = 0;
+            if (highway_city === 'Highway'){
+                maxM = d3.max(data, function(d) { return +d.AverageHighwayMPG; });
+                minM = d3.min(data, function(d) { return +d.AverageHighwayMPG; });
+            }else{
+                maxM = d3.max(data, function(d) { return +d.AverageCityMPG; });
+                minM = d3.min(data, function(d) { return +d.AverageCityMPG; });
+            }
+            var max_x = 10;
+            var max_y = 10;
+            var min_x = 0;
+            var min_y = 0;
+            var aDx = 0;
+            var aDy = 0;
+            var aLabel_max = "";
+            var aLabel_min = "";
             var ySH = yh;
             var ySC = yc;
+            //console.log('data', data);
             d3.select("svg").selectAll("*").remove();
             d3.select('svg')
             .attr('width', width + 4*margin.left)
@@ -311,12 +331,12 @@
                 if (sel === 'All'){
                     return 7 ;
                 }else if(sel === 'Gasoline'){
-                    ySH = yGD;
-                    ySC = yGD;
+                    ySH = yG;
+                    ySC = yG;
                     return 7 ;
                 }else if(sel === 'Diesel'){
-                    ySH = yGD;
-                    ySC = yGD;
+                    ySH = yD;
+                    ySC = yD;
                     return 12 ;
                 }
                 else{
@@ -324,14 +344,59 @@
                 }
             })
             .attr('x',function(d,i){
+                
                 if (sel === 'All'){
-                     return 7 *i;
+                    x = 7 *i;
                 }else if(sel === 'Gasoline'){
-                    return 7 *i;
+                    x =  7 *i;
                 }
                 else{
-                    return  12*i;;
+                    x = 12*i;
                 }
+                if (highway_city === 'City'){
+                    if (maxM === +d.AverageCityMPG){
+                        max_x = x;
+                        max_y = (420- ySC(d.AverageCityMPG));
+                        if (sel === 'All'){
+                            aLabel_max =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageCityMPG+"\n"+"Type:"+d.Fuel;
+                        }
+                        else{
+                            aLabel_max =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageCityMPG;
+                        }
+                    }
+                    if (minM === +d.AverageCityMPG){
+                        min_x = x;
+                        min_y = (420- ySC(d.AverageCityMPG));
+                        if (sel === 'All'){
+                            aLabel_min =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageCityMPG+"\n"+"Type:"+d.Fuel;
+                        }
+                        else{
+                            aLabel_min =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageCityMPG;
+                        }
+                    }
+                }else{
+                    if (maxM === +d.AverageHighwayMPG){
+                        max_x = x;
+                        max_y = (420- ySH(d.AverageHighwayMPG));
+                        if (sel === 'All'){
+                            aLabel_max =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageHighwayMPG+"\n"+"Type:"+d.Fuel;
+                        }
+                        else{
+                            aLabel_max =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageHighwayMPG;
+                        }
+                    }
+                    if (minM === +d.AverageHighwayMPG){
+                        min_x = x;
+                        min_y = (420- ySH(d.AverageHighwayMPG));
+                        if (sel === 'All'){
+                            aLabel_min =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageHighwayMPG + "\n"+"Type:"+d.Fuel;
+                        }
+                        else{
+                            aLabel_min =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageHighwayMPG;
+                        }
+                    }
+                }
+                return x;
             })
             .attr('height', 20)
             .attr('y', 400)
@@ -341,10 +406,17 @@
                }else{
                  var mileage = d.AverageHighwayMPG;
                }
+               if(sel === 'All')
+               {
+                var htmltxt = "Make:"+d.Make+"\n"+ "Type:"+ d.Fuel + "\n"+"Mileage:"+ mileage + "\n"+"Cylinder:"+d.EngineCylinders ;
+               }else{
+                var htmltxt = "Make:"+d.Make+"\n"+ "Mileage:"+ mileage+ "\n"+ "Cylinder:"+d.EngineCylinders  ;
+               }
+               var htmltext = 
                 tooltip.style("opacity", 1)
                 .style("left",(d3.event.pageX - 200)+"px")
                 .style("top",(d3.event.pageY - 100)+"px")
-                .html("Make:"+d.Make+"\n"+ "Cylinder:"+d.EngineCylinders + "\n"+ "Mileage:"+ mileage );
+                .html(htmltxt );
             })
             .on("mouseout", function() { tooltip.style("opacity", 0) })
             .transition().duration(1000)
@@ -356,22 +428,115 @@
                     }
              })
             .attr('y',function(d,i) {
+                    var y;
                     if (highway_city === 'Highway'){
-                        return(420- ySH(d.AverageHighwayMPG));
+                        y = 420- ySH(d.AverageHighwayMPG);
                     }else{
-                        return(420- ySC(d.AverageCityMPG));
+                        y = 420- ySC(d.AverageCityMPG);
                     }
+                    return y;
+            
                 
             });
-            //d3.select('svg').
-            //append('g')
-            ///.attr('transform','translate(50,50)')
-            //.call(d3.axisLeft(y));
-            //d3.select('svg')
-            //.append('g')
-            //.attr('transform','translate(50,470)')
-            //.call(d3.axisBottom(x));
+            var aDxMax = 0;
+            var aDyMax = 0;
+            var aDxMin = 0;
+            var aDyMin = 0;
+            
+            if (sel === 'All'){
+                if (highway_city === 'Highway'){
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 0;
+                    aDyMin = 60;
+                }else{
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 0;
+                    aDyMin = 35;
+                } 
+            }else if(sel === 'Gasoline'){
+                if (highway_city === 'Highway'){
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = -10;
+                    aDyMin = 100;
+                }else{
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = -10;
+                    aDyMin = 70;
+                } 
+            }
+            else if(sel === 'Diesel'){
+                if (highway_city === 'Highway'){
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 10;
+                    aDyMin = 10;
+                }else{
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 10;
+                    aDyMin = 10;
+                } 
+            }
+            else{
+                if (highway_city === 'Highway'){
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 70;
+                    aDyMin = 70;
+                }else{
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 70;
+                    aDyMin = 70;
+                } 
+            }
+            //setTimeout(insertAnnotation(max_x, max_y), 3000);
+            //insertAnnotation(max_x, max_y);
+            //insertAnnotation(min_x, min_y);
+            setTimeout(function(){ insertAnnotation(max_x, max_y, aDxMax, aDyMax,"Mileage Campion", aLabel_max); }, 800);
+            setTimeout(function(){ insertAnnotation(min_x, min_y, aDxMin, aDyMin,"Lowest Mileage", aLabel_min); }, 800);
+        }
 
+        function insertAnnotation(aX, aY, aDx, aDy, aTitle, aLable){ 
+        
+            var annotationsRight = [
+            {
+            note: {
+              label: aLable,
+              title: aTitle,
+            },
+            connector: {
+              end: "arrow",        // none, or arrow or dot
+              type: "curve",       // Line or curve
+              points: 3,           // Number of break in the curve
+              lineType : "vertical"
+            },
+            color: ["green"],
+            x: aX + 50,
+            y: aY + 50,
+            dy: aDy,
+            dx: aDx
+            }
+            ]
+            
+            // Add annotation to the chart
+            var makeAnnotationsRight = d3.annotation()
+            .annotations(annotationsRight)
+            d3.select("#chart")
+            .append("g")
+            .call(makeAnnotationsRight)
+            // Style
+            d3.select("#chart").selectAll(".connector")
+            .attr('stroke', "black")
+            .style("stroke-dasharray", ("3, 3"))
+            d3.select("#chart").selectAll(".connector-end")
+            .attr('stroke', "blue")
+            .attr('fill', "blue")
+            
         }
 
 	</script>
@@ -388,8 +553,7 @@
 				<!--svg width=500 height=700></svg -->
 				<!--style> rect {fill: lightblue; stroke: black; }</style -->
 				<div id="barChartDiv">
-				   <svg width=500 height=500>
-			   	</svg>
+                <svg width="500" height="500" id="chart"></svg>
 		  	</div>
             <div id="tooltip"></div>
 				<!--div id="bubleChartDiv" style="display:none">
