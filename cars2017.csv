@@ -1,4 +1,4 @@
-﻿Model,Displ,Cyl,Trans,Drive,Fuel,SalesArea,Stnd,Stnd Description,Underhood ID,VehClass,Smog Rating,City MPG,Hwy MPG,Cmb MPG,Greenhouse Gas Score,SmartWay
+﻿Model,Displ,Cyl,Trans,Drive,Fuel,SalesArea,Stnd,Stnd Description,Underhood ID,VehClass,SmogRating,CityMPG,HwyMPG,CmbMPG,Greenhouse Gas Score,SmartWay
 ACURA ILX,2.4,4,AMS-8,2WD,Gasoline,CA,L3ULEV125,California LEV-III ULEV125,HHNXV02.4SH3,small car,6,25,35,29,7,Yes
 ACURA ILX,2.4,4,AMS-8,2WD,Gasoline,FA,T3B125,Federal Tier 3 Bin 125,HHNXV02.4SH3,small car,6,25,35,29,7,Yes
 ACURA RLX,3.5,6,AMS-7,4WD,Gasoline,CA,L3SULEV30,California LEV-III SULEV30,HHNXV03.5LK3,midsize car,8,29,30,29,7,Yes
