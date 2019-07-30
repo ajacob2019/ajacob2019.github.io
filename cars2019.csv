@@ -1,4 +1,4 @@
-﻿Model,Displ,Cyl,Trans,Drive,Fuel,Cert Region,Stnd,Stnd Description,Underhood ID,VehClass,Air Pollution Score,CityMPG,HwyMPG,CmbMPG,Greenhouse Gas Score,SmartWay
+﻿Model,Displ,Cyl,Trans,Drive,Fuel,CertRegion,Stnd,Stnd Description,Underhood ID,VehClass,Air Pollution Score,CityMPG,HwyMPG,CmbMPG,Greenhouse Gas Score,SmartWay
 AUDI A4,2,4,AMS-7,2WD,Gasoline,CA,L3ULEV70,California LEV-III ULEV70,KVGAV02.0A7C,small car,5,27,34,30,7,Yes
 AUDI A4,2,4,AMS-7,2WD,Gasoline,FA,T3B70,Federal Tier 3 Bin 70,KVGAV02.0A7C,small car,5,27,34,30,7,Yes
 AUDI e-tron,N/A,N/A,Auto-1,4WD,Electricity,FA,T3B0,Federal Tier 3 Bin 0,KVGAT00.0AZE,standard SUV,10,74,73,74,10,Elite
