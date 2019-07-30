@@ -177,7 +177,8 @@
         document.write(bodyText[Math.floor(Math.random()*7)]+" ") */
         }
         async function init() {
-            csvdata = await d3.csv('https://flunky.github.io/cars2017.csv');
+            //csvdata = await d3.csv('https://flunky.github.io/cars2017.csv');
+            csvdata = await d3.csv('cars2017.csv');
             for (var i = 0; i < csvdata.length; i++) {
                 var data = csvdata[i];
 
@@ -356,10 +357,10 @@
                 }else if(sel === 'Diesel'){
                     ySH = yD;
                     ySC = yD;
-                    return 12 ;
+                    return 35 ;
                 }
                 else{
-                    return  12;
+                    return  35;
                 }
             })
             .attr('x',function(d,i){
@@ -370,7 +371,7 @@
                     x =  7 *i;
                 }
                 else{
-                    x = 12*i;
+                    x = 35*i;
                 }
                 if (highway_city === 'City'){
                     if (maxM === +d.AverageCityMPG){
