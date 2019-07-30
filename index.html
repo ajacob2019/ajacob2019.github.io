@@ -1,6 +1,633 @@
+<!DOCTYPE html>
+<!-- Template by html.am -->
 <html>
-<body>
-<p>This is Abhilash Jacob test web page.</p>
-<p>Here is the <a href="cars2017.csv">data.csv</a> file</p>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <!-- Load d3-annotation -->
+  <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+  <!-- Bootstrap -->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<title>3 Mileage Analysis</title>
+	<style type="text/css">
+
+		/* Layout */
+		body {
+			min-width: 630px;
+		}
+
+		#container {
+			padding-left: 200px;
+			padding-right: 100px;
+			height:45em;
+		}
+
+		#container .column {
+			position: relative;
+			float: left;
+			color:LightGrayl
+		}
+
+		#center {
+			padding: 10px 10px;
+			width: 100%;
+		}
+
+		#left {
+			width: 27em;
+			padding: 0 60px;
+			right: 240px;
+			margin-left: -100%;
+		}
+
+		#right {
+			width: 130px;
+			padding: 0 10px;
+			margin-right: -100%;
+		}
+
+		#footer {
+			clear: both;
+		}
+
+		/* IE hack */
+		* html #left {
+			left: 150px;
+		}
+
+		/* Make the columns the same height as each other */
+		#container {
+			overflow: hidden;
+		}
+
+		#container .column {
+			padding-bottom: 1001em;
+			margin-bottom: -1000em;
+		}
+
+		/* Fix for the footer */
+		* html body {
+			overflow: hidden;
+		}
+
+		* html #footer-wrapper {
+			float: left;
+			position: relative;
+			width: 100%;
+			padding-bottom: 10010px;
+			margin-bottom: -10000px;
+			background: #fff;
+		}
+
+		/* Aesthetics */
+		body {
+			margin: 0;
+			padding: 0;
+			font-family:Sans-serif;
+			line-height: 1.5em;
+		}
+
+		p {
+			color: #555;
+		}
+
+		nav ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		nav ul a {
+			color: darkgreen;
+			text-decoration: none;
+		}
+
+		#header, #footer {
+			font-size: large;
+			padding: 1em;
+			background: white;
+		}
+
+		#left {
+			background: white;
+		}
+
+		#right {
+			background: white;
+		}
+
+		#center {
+			background: white;
+		}
+
+		#container .column {
+			padding-top: 1em;
+		}
+
+		body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+
+    #story-buttons {margin-left: 40px; margin-top:40px}
+    #commentary {margin-top: 100px;left:120px;font-size:36pt; font-family: "monospace";text-align:center;}
+    #tooltip {
+        opacity: 0;
+        position: absolute;			
+        text-align: center;			
+        width: 100px;					
+        height: 60px;					
+        padding: 2px;				
+        font: 12px sans-serif;		
+        background: #ABEBC6;	
+        border: 0px;		
+        border-radius: 8px;			
+        pointer-events: none;	
+    }
+    circle {fill: lightblue; stroke: black;}
+    rect {fill: lightblue; stroke: black; }
+
+	</style>
+
+	<script type="text/javascript">
+        var csvdata=[];
+        var gasolineData=[];
+        var electricityData=[];
+        var dieselData=[];
+        var dataToChart=[];
+        var buble= true;
+        var highway_city = 'Highway';
+        var sel = 'All';
+        
+		/* =============================
+		This script generates sample text for the body content.
+		You can remove this script and any reference to it.
+		 ============================= */
+        var bodyTextAll="  Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Acura has a highest milage amoung all auto maker";
+        var bodyTextGasoline="Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Acura has a highest milage amoung in gasoline auto maker";
+        var bodyTextDiesel="Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Acura has a highest milage amoung in Diesel auto maker";
+        var bodyTextElectric="Mileage for vehicle the ratio of the number of miles traveled to the number of gallons of gasoline burned. Tesla has a highest milage amoung in electric auto maker";
+        // Define the div for the tooltip
+        var div = d3.select("body").append("div")	
+                .attr("class", "tooltip")				
+                .style("opacity", 0);
+        var orginalStyle= d3.select("#HighwayMPG").style("background");        
+        function generateText(sentenceCount){
+        /*for (var i=0; i<sentenceCount; i++)
+        document.write(bodyText[Math.floor(Math.random()*7)]+" ") */
+        }
+        async function init() {
+            //csvdata = await d3.csv('https://flunky.github.io/cars2017.csv');
+            //csvdata = await d3.csv('cars2018.csv');
+            csvdata = await d3.csv('https://ajacob2019.github.io/cars2017.csv');
+            
+            for (var i = 0; i < csvdata.length; i++) {
+                var data = csvdata[i];
+
+                if(data.Fuel === "Gasoline"){
+                    gasolineData.push(data);
+                } else if(data.Fuel === "Electricity"){
+                        electricityData.push(data);
+                }else if (data.Fuel === "Diesel") {
+                    dieselData.push(data);
+                }
+            }
+            function compareByThird(a, b) {
+                a = a + '';
+                b = b + '';
+                var aArr = a.split(',');
+                var bArr = b.split(',');
+                if (aArr[3] < bArr[3]) {
+                    return -1;
+                } else if (aArr[3] > bArr[3]) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+
+            //dieselData.sort(compareByThird);
+            
+            console.log('Gasoline data count', gasolineData.length);
+            console.log('diesel data count', dieselData.length);
+            console.log('Electricity data count', electricityData.length);
+           // console.log(dieselData.sort(compareByThird));
+           dispatchButton('All');
+        }
+        function  dispatchButton(source) {
+            if(source === 'All'){
+                dataToChart = csvdata;
+                sel = 'All';
+                d3.select("#content-text").html('<h4>All Data</h4><br>'+bodyTextAll);
+                d3.select("#All").style("background", 'rgb(211, 211, 211)');
+                d3.select("#Gasoline").style("background", orginalStyle);
+                d3.select("#Diesel").style("background", orginalStyle);
+                d3.select("#Electric").style("background", orginalStyle);
+            }else if(source === 'Gasoline'){
+                    d3.select("#content-text").html('<h4>Gasoline Data</h4><br>'+bodyTextGasoline);
+                dataToChart = gasolineData;
+                sel = 'Gasoline';
+                d3.select("#All").style("background", orginalStyle);
+                d3.select("#Gasoline").style("background", 'rgb(211, 211, 211)');
+                d3.select("#Diesel").style("background", orginalStyle);
+                d3.select("#Electric").style("background", orginalStyle);
+            }else if(source === 'Diesel'){
+                sel = 'Diesel';
+                d3.select("#content-text").html('<h4>Diesel Data</h4><br>'+bodyTextDiesel);
+                dataToChart = dieselData;
+                d3.select("#All").style("background", orginalStyle);
+                d3.select("#Gasoline").style("background", orginalStyle);
+                d3.select("#Diesel").style("background",'rgb(211, 211, 211)');
+                d3.select("#Electric").style("background", orginalStyle);
+            } else if (source === 'Electric'){
+                sel = 'Electric';
+                d3.select("#content-text").html('<h4>Electric Data</h4><br>'+bodyTextElectric);
+                dataToChart = electricityData;
+                d3.select("#All").style("background", orginalStyle);
+                d3.select("#Gasoline").style("background", orginalStyle);
+                d3.select("#Diesel").style("background", orginalStyle);
+                d3.select("#Electric").style("background", 'rgb(211, 211, 211)');
+
+            }
+            var highwayMPGStyle= d3.select("#HighwayMPG").style("background");
+            var cityMPGStyle= d3.select("#CityMPG").style("background");
+            if(highwayMPGStyle.includes('rgb(255, 255, 255)') && cityMPGStyle.includes('rgb(255, 255, 255)')){
+                d3.select("#HighwayMPG").style("background", 'rgb(211, 211, 211)');
+            }
+            else{
+                d3.select("#HighwayMPG").style("background", cityMPGStyle);
+                d3.select("#CityMPG").style("background", highwayMPGStyle);
+            }
+
+            barChart(dataToChart);
+            //if(buble){
+              //  bubleChart(dataToChart);
+            //}
+            //else{
+                //barChart(dieselData);
+            //}
+        }
+		function dispatchHighway_City(src){
+			d3.select("svg").selectAll("*").remove();
+            if(src === 'Highway')
+            {
+                highway_city = 'Highway';
+            }else{
+                highway_city = 'City';
+            }
+            barChart(dataToChart);
+            
+		}
+
+        function bubleChart(data){
+            buble=!buble;
+            sx = d3.scaleLog().base(10).domain([10,150]).range([0,200]);
+            sy = d3.scaleLog().base(10).domain([10,150]).range([200,0]);
+            x = d3.scaleLinear().domain([0,400]).range([0, 400]);
+            y = d3.scaleLinear().domain([0,400]).range([400, 0]);
+                d3.select("svg").selectAll("*").remove();
+            d3.select('svg')
+            .append('g').attr('transform','translate(50,50)')
+            .selectAll('circle')
+            .data(data)
+            .enter()
+            .append('circle')
+            .attr('cx', function(d, i){return i*2;})
+            .attr('cy', function(d, i){return d.AverageHighwayMPG;})
+            .attr('r', function(d, i){return  2 ;});
+
+            d3.select('svg').
+            append('g')
+            .attr('transform','translate(50,50)')
+            .call(d3.axisLeft(y)
+            );
+            d3.select('svg')
+            .append('g')
+            .attr('transform','translate(50,450)')
+            .call(d3.axisBottom(x)
+            );
+        }
+        function barChart(data){
+
+            var tooltip = d3.select("#tooltip");
+            
+            var margin = {top: 0, right: 0, bottom: 10, left: 50},
+            width  = 1000 - margin.left - margin.right,
+            height = 540 - margin.top - margin.bottom;
+            //x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0,200]);
+            yh = d3.scaleLinear().domain([0,150]).range([0, 500]);
+            yc = d3.scaleLinear().domain([0,170]).range([0, 500]);
+            yG = d3.scaleLinear().domain([0,80]).range([0, 500]);
+            yD = d3.scaleLinear().domain([0,50]).range([0, 500]);
+            var maxM = 0;
+            var minM = 0;
+            if (highway_city === 'Highway'){
+                maxM = d3.max(data, function(d) { return +d.AverageHighwayMPG; });
+                minM = d3.min(data, function(d) { return +d.AverageHighwayMPG; });
+            }else{
+                maxM = d3.max(data, function(d) { return +d.AverageCityMPG; });
+                minM = d3.min(data, function(d) { return +d.AverageCityMPG; });
+            }
+            var max_x = 10;
+            var max_y = 10;
+            var min_x = 0;
+            var min_y = 0;
+            var aDx = 0;
+            var aDy = 0;
+            var aLabel_max = "";
+            var aLabel_min = "";
+            var ySH = yh;
+            var ySC = yc;
+            //console.log('data', data);
+            d3.select("svg").selectAll("*").remove();
+            d3.select('svg')
+            .attr('width', width + 4*margin.left)
+            .attr('height',height + 4*margin.bottom)
+            .append('g').attr('transform','translate(50,50)')
+            .selectAll('rect')
+            .data(data)
+            .enter()
+            .append('rect')
+            //.attr("width",6) // width of a bar chart
+            .attr("width",function(d,i){
+                if (sel === 'All'){
+                    return 7 ;
+                }else if(sel === 'Gasoline'){
+                    ySH = yG;
+                    ySC = yG;
+                    return 7 ;
+                }else if(sel === 'Diesel'){
+                    ySH = yD;
+                    ySC = yD;
+                    return 35 ;
+                }
+                else{
+                    return  35;
+                }
+            })
+            .attr('x',function(d,i){
+                
+                if (sel === 'All'){
+                    x = 7 *i;
+                }else if(sel === 'Gasoline'){
+                    x =  7 *i;
+                }
+                else{
+                    x = 35*i;
+                }
+                if (highway_city === 'City'){
+                    if (maxM === +d.AverageCityMPG){
+                        max_x = x;
+                        max_y = (420- ySC(d.AverageCityMPG));
+                        if (sel === 'All'){
+                            aLabel_max =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageCityMPG+"\n"+"Type:"+d.Fuel;
+                        }
+                        else{
+                            aLabel_max =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageCityMPG;
+                        }
+                    }
+                    if (minM === +d.AverageCityMPG){
+                        min_x = x;
+                        min_y = (420- ySC(d.AverageCityMPG));
+                        if (sel === 'All'){
+                            aLabel_min =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageCityMPG+"\n"+"Type:"+d.Fuel;
+                        }
+                        else{
+                            aLabel_min =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageCityMPG;
+                        }
+                    }
+                }else{
+                    if (maxM === +d.AverageHighwayMPG){
+                        max_x = x;
+                        max_y = (420- ySH(d.AverageHighwayMPG));
+                        if (sel === 'All'){
+                            aLabel_max =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageHighwayMPG+"\n"+"Type:"+d.Fuel;
+                        }
+                        else{
+                            aLabel_max =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageHighwayMPG;
+                        }
+                    }
+                    if (minM === +d.AverageHighwayMPG){
+                        min_x = x;
+                        min_y = (420- ySH(d.AverageHighwayMPG));
+                        if (sel === 'All'){
+                            aLabel_min =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageHighwayMPG + "\n"+"Type:"+d.Fuel;
+                        }
+                        else{
+                            aLabel_min =  "Make:"+d.Make+"\n"+"Mileage:"+d.AverageHighwayMPG;
+                        }
+                    }
+                }
+                return x;
+            })
+            .attr('height', 20)
+            .attr('y', 400)
+            .on("mouseover", function(d,i) {
+               if (highway_city === 'City'){
+                  var mileage = d.AverageCityMPG;
+               }else{
+                 var mileage = d.AverageHighwayMPG;
+               }
+               if(sel === 'All')
+               {
+                var htmltxt = "Make:"+d.Make+"\n"+ "Type:"+ d.Fuel + "\n"+"Mileage:"+ mileage + "\n"+"Cylinder:"+d.EngineCylinders ;
+               }else{
+                var htmltxt = "Make:"+d.Make+"\n"+ "Mileage:"+ mileage+ "\n"+ "Cylinder:"+d.EngineCylinders  ;
+               }
+               var htmltext = 
+                tooltip.style("opacity", 1)
+                .style("left",(d3.event.pageX - 200)+"px")
+                .style("top",(d3.event.pageY - 100)+"px")
+                .html(htmltxt );
+            })
+            .on("mouseout", function() { tooltip.style("opacity", 0) })
+            .transition().duration(1000)
+            .attr('height', function(d,i) {
+                    if (highway_city === 'Highway'){
+                        return ySH(d.AverageHighwayMPG);
+                    }else{
+                        return ySC(d.AverageCityMPG);
+                    }
+             })
+            .attr('y',function(d,i) {
+                    var y;
+                    if (highway_city === 'Highway'){
+                        y = 420- ySH(d.AverageHighwayMPG);
+                    }else{
+                        y = 420- ySC(d.AverageCityMPG);
+                    }
+                    return y;
+            
+                
+            });
+            var aDxMax = 0;
+            var aDyMax = 0;
+            var aDxMin = 0;
+            var aDyMin = 0;
+            
+            if (sel === 'All'){
+                if (highway_city === 'Highway'){
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 0;
+                    aDyMin = 60;
+                }else{
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 0;
+                    aDyMin = 35;
+                } 
+            }else if(sel === 'Gasoline'){
+                if (highway_city === 'Highway'){
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = -10;
+                    aDyMin = 100;
+                }else{
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = -10;
+                    aDyMin = 70;
+                } 
+            }
+            else if(sel === 'Diesel'){
+                if (highway_city === 'Highway'){
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 10;
+                    aDyMin = 10;
+                }else{
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 10;
+                    aDyMin = 10;
+                } 
+            }
+            else{
+                if (highway_city === 'Highway'){
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 10;
+                    aDyMin = 70;
+                }else{
+                    aDxMax = 70;
+                    aDxMin = 70;
+                    aDyMax = 10;
+                    aDyMin = 70;
+                } 
+            }
+            //setTimeout(insertAnnotation(max_x, max_y), 3000);
+            //insertAnnotation(max_x, max_y);
+            //insertAnnotation(min_x, min_y);
+            setTimeout(function(){ insertAnnotation(max_x, max_y, aDxMax, aDyMax,"Mileage Campion", aLabel_max); }, 400);
+            setTimeout(function(){ insertAnnotation(min_x, min_y, aDxMin, aDyMin,"Lowest Mileage", aLabel_min); }, 400);
+        }
+
+        function insertAnnotation(aX, aY, aDx, aDy, aTitle, aLable){ 
+        
+            var annotationsRight = [
+            {
+            note: {
+              label: aLable,
+              title: aTitle,
+            },
+            connector: {
+              end: "arrow",        // none, or arrow or dot
+              type: "curve",       // Line or curve
+              points: 3,           // Number of break in the curve
+              lineType : "vertical"
+            },
+            color: ["green"],
+            x: aX + 50,
+            y: aY + 50,
+            dy: aDy,
+            dx: aDx
+            }
+            ]
+            
+            // Add annotation to the chart
+            var makeAnnotationsRight = d3.annotation()
+            .annotations(annotationsRight)
+            d3.select("#chart")
+            .append("g")
+            .call(makeAnnotationsRight)
+            // Style
+            d3.select("#chart").selectAll(".connector")
+            .attr('stroke', "black")
+            .style("stroke-dasharray", ("3, 3"))
+            d3.select("#chart").selectAll(".connector-end")
+            .attr('stroke', "blue")
+            .attr('fill', "blue")
+            
+        }
+
+	</script>
+</head>
+
+<body onload='init()'>
+
+	<header id="header" style="font-family: serif;font-size: 40px;padding-top:.5em;padding-bottom:0"><p>Mileage Analysis For Automotive Makers</p></header>
+    <div id="container">
+
+		<main id="center" class="column" style="background-color: rgb(240, 240, 240);">
+			<article style="padding-left: 10em">
+				<!--p><script>generateText(50)</script></p -->
+				<!--svg width=500 height=700></svg -->
+				<!--style> rect {fill: lightblue; stroke: black; }</style -->
+				<div id="barChartDiv">
+                <svg width="1100" height="600" id="chart"></svg>
+		  	</div>
+            <div id="tooltip"></div>
+				<!--div id="bubleChartDiv" style="display:none">
+				   <svg width=800 height=600>
+			   	</svg>
+		  	</div -->
+
+			<div id="" role="group" class="btn-group" >
+            
+
+			<button id="HighwayMPG" type="button" class="btn btn-default" onClick="dispatchHighway_City('Highway');">HighwayMPG</button>
+         	<button id="CityMPG"  type="button" class="btn btn-default"onClick="dispatchHighway_City('City');">CityMPG</button>
+         	<button id="Clear"  type="button" class="btn btn-default" onClick="dispatchClear('Clear');">Clear</button> 
+			</div>
+			</article>
+		</main>
+
+		<nav id="left" class="column">
+	<div id="" class="btn-group" role="group" aria-label="questions to be answered">
+	<button id="All" type="button" class="btn btn-default" onClick="dispatchButton('All');">All</button>
+  	<button id="Gasoline" type="button" class="btn btn-default" onClick="dispatchButton('Gasoline');">Gasoline</button>
+  	<button id="Diesel" type="button" class="btn btn-default" onClick="dispatchButton('Diesel');">Diesel</button>
+  	<button id="Electric" type="button" class="btn btn-default" onClick="dispatchButton('Electric');">Electric</button>
+
+ 	</div>
+			<ul>
+				<li>
+					<div id="content-text"></div>
+				</li>
+			</ul>
+			<!--h3>Left heading</h3>
+			<ul>
+				<li><a href="#">Link 1</a></li>
+				<li><a href="#">Link 2</a></li>
+				<li><a href="#">Link 3</a></li>
+				<li><a href="#">Link 4</a></li>
+				<li><a href="#">Link 5</a></li>
+			</ul -->
+
+		</nav>
+
+		<!--div id="right" class="column">
+			<h3>Right heading</h3>
+			<p><script>generateText(1)</script></p>
+		</div -->
+
+	</div>
+
+	<div id="footer-wrapper">
+		<!--footer id="footer"><p>Footer...</p></footer-->
+	</div>
+
 </body>
+
 </html>
