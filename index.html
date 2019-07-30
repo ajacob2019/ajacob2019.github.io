@@ -184,7 +184,7 @@
             for (var i = 0; i < csvdata.length; i++) {
                 var data = csvdata[i];
 
-                if(data.Fuel === "Gasoline"){
+                if((data.Fuel === "Gasoline")&&(data.Sales#Area === "FA")){
                     gasolineData.push(data);
                 } else if(data.Fuel === "Electricity"){
                         electricityData.push(data);

@@ -1,4 +1,4 @@
-﻿Model,Displ,Cyl,Trans,Drive,Fuel,Sales Area,Stnd,Stnd Description,Underhood ID,Veh Class,Smog Rating,City MPG,Hwy MPG,Cmb MPG,Greenhouse Gas Score,SmartWay
+﻿Model,Displ,Cyl,Trans,Drive,Fuel,SalesArea,Stnd,Stnd Description,Underhood ID,VehClass,Smog Rating,City MPG,Hwy MPG,Cmb MPG,Greenhouse Gas Score,SmartWay
 ACURA ILX,2.4,4,AMS-8,2WD,Gasoline,CA,L3ULEV125,California LEV-III ULEV125,HHNXV02.4SH3,small car,6,25,35,29,7,Yes
 ACURA ILX,2.4,4,AMS-8,2WD,Gasoline,FA,T3B125,Federal Tier 3 Bin 125,HHNXV02.4SH3,small car,6,25,35,29,7,Yes
 ACURA RLX,3.5,6,AMS-7,4WD,Gasoline,CA,L3SULEV30,California LEV-III SULEV30,HHNXV03.5LK3,midsize car,8,29,30,29,7,Yes
@@ -25,8 +25,8 @@ BMW i3 BEV,N/A,N/A,Auto-1,2WD,Electricity,FA,T3B0,Federal Tier 3 Bin 0,HBMXV00.0
 BMW i3 BEV,N/A,N/A,Auto-1,2WD,Electricity,CA,ZEV,California ZEV,HBMXV00.0I3B,small car,10,129,106,118,10,Elite
 BMW i3 BEV (60Ah),N/A,N/A,Auto-1,2WD,Electricity,FA,T3B0,Federal Tier 3 Bin 0,HBMXV00.0I3B,small car,10,137,111,124,10,Elite
 BMW i3 BEV (60Ah),N/A,N/A,Auto-1,2WD,Electricity,CA,ZEV,California ZEV,HBMXV00.0I3B,small car,10,137,111,124,10,Elite
-BMW i3 REx,.6,2,Auto-1,2WD,Gasoline/Electricity,CA,L3SULEV30/PZEV,California LEV-III SULEV30/PZEV,HBMXV00.6I3R,small car,9,36/118,33/103,35/111,10,Elite
-BMW i3 REx,.6,2,Auto-1,2WD,Gasoline/Electricity,FA,T3B30,Federal Tier 3 Bin 30,HBMXV00.6I3R,small car,8,36/118,33/103,35/111,10,Yes
+BMW i3 REx,0.6,2,Auto-1,2WD,Gasoline/Electricity,CA,L3SULEV30/PZEV,California LEV-III SULEV30/PZEV,HBMXV00.6I3R,small car,9,36/118,33/103,35/111,10,Elite
+BMW i3 REx,0.6,2,Auto-1,2WD,Gasoline/Electricity,FA,T3B30,Federal Tier 3 Bin 30,HBMXV00.6I3R,small car,8,36/118,33/103,35/111,10,Yes
 BMW i8,1.5,3,Auto-6,4WD,Gasoline/Electricity,FA,T3B125,Federal Tier 3 Bin 125,HBMXV01.5I8P,small car,6,28/80,29/72,28/76,10,Yes
 BMW i8,1.5,3,Auto-6,4WD,Gasoline/Electricity,CA,U2,California LEV-II ULEV,HBMXV01.5I8P,small car,6,28/80,29/72,28/76,10,Yes
 BUICK Encore,1.4,4,SemiAuto-6,2WD,Gasoline,CA,T3B110,Federal Tier 3 Transitional Bin 110,HGMXV01.4001,small SUV,6,27,33,30,7,Yes
@@ -384,14 +384,14 @@ NISSAN Versa,1.6,4,Man-5,2WD,Gasoline,FA,T3B125,Federal Tier 3 Bin 125,HNSXV01.6
 NISSAN Versa,1.6,4,Man-5,2WD,Gasoline,CA,U2,California LEV-II ULEV,HNSXV01.6N4A,small car,6,27,36,30,7,Yes
 PORSCHE Cayenne S e-Hybrid,3,6,AutoMan-8,4WD,Gasoline/Electricity,FA,B5,Federal Tier 2 Bin 5,HPRXT03.0PHV,standard SUV,5,21/47,24/45,22/46,8,Yes
 PORSCHE Cayenne S e-Hybrid,3,6,AutoMan-8,4WD,Gasoline/Electricity,CA,U2,California LEV-II ULEV,HPRXT03.0PHV,standard SUV,6,21/47,24/45,22/46,8,Yes
-SMART ForTwo Convertible,.9,3,AutoMan-6,2WD,Gasoline,CA,L3ULEV70,California LEV-III ULEV70,HMBXV00.9U2A,small car,7,33,38,35,8,Yes
-SMART ForTwo Convertible,.9,3,AutoMan-6,2WD,Gasoline,FA,T3B70,Federal Tier 3 Bin 70,HMBXV00.9U2A,small car,7,33,38,35,8,Yes
-SMART ForTwo Convertible,.9,3,Man-5,2WD,Gasoline,CA,L3ULEV70,California LEV-III ULEV70,HMBXV00.9U2A,small car,7,31,38,34,8,Yes
-SMART ForTwo Convertible,.9,3,Man-5,2WD,Gasoline,FA,T3B70,Federal Tier 3 Bin 70,HMBXV00.9U2A,small car,7,31,38,34,8,Yes
-SMART ForTwo Coupe,.9,3,AutoMan-6,2WD,Gasoline,CA,L3ULEV70,California LEV-III ULEV70,HMBXV00.9U2A,small car,7,33,39,35,8,Yes
-SMART ForTwo Coupe,.9,3,AutoMan-6,2WD,Gasoline,FA,T3B70,Federal Tier 3 Bin 70,HMBXV00.9U2A,small car,7,33,39,35,8,Yes
-SMART ForTwo Coupe,.9,3,Man-5,2WD,Gasoline,CA,L3ULEV70,California LEV-III ULEV70,HMBXV00.9U2A,small car,7,31,39,34,8,Yes
-SMART ForTwo Coupe,.9,3,Man-5,2WD,Gasoline,FA,T3B70,Federal Tier 3 Bin 70,HMBXV00.9U2A,small car,7,31,39,34,8,Yes
+SMART ForTwo Convertible,0.9,3,AutoMan-6,2WD,Gasoline,CA,L3ULEV70,California LEV-III ULEV70,HMBXV00.9U2A,small car,7,33,38,35,8,Yes
+SMART ForTwo Convertible,0.9,3,AutoMan-6,2WD,Gasoline,FA,T3B70,Federal Tier 3 Bin 70,HMBXV00.9U2A,small car,7,33,38,35,8,Yes
+SMART ForTwo Convertible,0.9,3,Man-5,2WD,Gasoline,CA,L3ULEV70,California LEV-III ULEV70,HMBXV00.9U2A,small car,7,31,38,34,8,Yes
+SMART ForTwo Convertible,0.9,3,Man-5,2WD,Gasoline,FA,T3B70,Federal Tier 3 Bin 70,HMBXV00.9U2A,small car,7,31,38,34,8,Yes
+SMART ForTwo Coupe,0.9,3,AutoMan-6,2WD,Gasoline,CA,L3ULEV70,California LEV-III ULEV70,HMBXV00.9U2A,small car,7,33,39,35,8,Yes
+SMART ForTwo Coupe,0.9,3,AutoMan-6,2WD,Gasoline,FA,T3B70,Federal Tier 3 Bin 70,HMBXV00.9U2A,small car,7,33,39,35,8,Yes
+SMART ForTwo Coupe,0.9,3,Man-5,2WD,Gasoline,CA,L3ULEV70,California LEV-III ULEV70,HMBXV00.9U2A,small car,7,31,39,34,8,Yes
+SMART ForTwo Coupe,0.9,3,Man-5,2WD,Gasoline,FA,T3B70,Federal Tier 3 Bin 70,HMBXV00.9U2A,small car,7,31,39,34,8,Yes
 SMART ForTwo Elec. Drive (coupe),N/A,N/A,Auto-1,2WD,Electricity,FA,T3B0,Federal Tier 3 Bin 0,HMBXV00.0ED1,small car,10,124,94,108,10,Elite
 SMART ForTwo Elec. Drive (coupe),N/A,N/A,Auto-1,2WD,Electricity,CA,ZEV,California ZEV,HMBXV00.0ED1,small car,10,124,94,108,10,Elite
 SUBARU Crosstrek,2,4,SCV-6,4WD,Gasoline,CA,L2SULEV30/PZEV,California LEV-II SULEV30/PZEV,HFJXT02.0NKR,small SUV,9,26,33,29,7,Yes
