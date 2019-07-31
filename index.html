@@ -148,7 +148,71 @@
     rect {fill: lightblue; stroke: black; }
 
 	</style>
+    <body onload='init()'>
 
+        <header id="header" style="font-family: serif;font-size: 40px;padding-top:.5em;padding-bottom:0"><p>Mileage Analysis For Automotive Makers</p></header>
+        <div id="container">
+
+            <main id="center" class="column" style="background-color: rgb(240, 240, 240);">
+                <article style="padding-left: 10em">
+                    <!--p><script>generateText(50)</script></p -->
+                    <!--svg width=500 height=700></svg -->
+                    <!--style> rect {fill: lightblue; stroke: black; }</style -->
+                    <div id="barChartDiv">
+                    <svg width="1100" height="600" id="chart"></svg>
+                </div>
+                <div id="tooltip"></div>
+                    <!--div id="bubleChartDiv" style="display:none">
+                       <svg width=800 height=600>
+                    </svg>
+                </div -->
+
+                <div id="" role="group" class="btn-group" >
+                
+
+                <button id="HighwayMPG" type="button" class="btn btn-default" onClick="dispatchHighway_City('Highway');">HighwayMPG</button>
+                <button id="CityMPG"  type="button" class="btn btn-default"onClick="dispatchHighway_City('City');">CityMPG</button>
+                <!--button id="Clear"  type="button" class="" onClick="dispatchClear('Clear');">Clear</button> -->
+                </div>
+                </article>
+            </main>
+
+            <nav id="left" class="column">
+        <div id="" class="btn-group" role="group" aria-label="questions to be answered">
+        <button id="All" type="button" class="btn btn-default" onClick="dispatchButton('All');">All</button>
+        <button id="Gasoline" type="button" class="btn btn-default" onClick="dispatchButton('Gasoline');">Gasoline</button>
+        <button id="Diesel" type="button" class="btn btn-default" onClick="dispatchButton('Diesel');">Diesel</button>
+        <button id="Electric" type="button" class="btn btn-default" onClick="dispatchButton('Electric');">Electric</button>
+
+        </div>
+                <ul>
+                    <li>
+                        <div id="content-text"></div>
+                    </li>
+                </ul>
+                <!--h3>Left heading</h3>
+                <ul>
+                    <li><a href="#">Link 1</a></li>
+                    <li><a href="#">Link 2</a></li>
+                    <li><a href="#">Link 3</a></li>
+                    <li><a href="#">Link 4</a></li>
+                    <li><a href="#">Link 5</a></li>
+                </ul -->
+
+            </nav>
+
+            <!--div id="right" class="column">
+                <h3>Right heading</h3>
+                <p><script>generateText(1)</script></p>
+            </div -->
+
+        </div>
+
+        <div id="footer-wrapper">
+            <!--footer id="footer"><p>Footer...</p></footer-->
+        </div>
+
+    </body>
 	<script type="text/javascript">
         var csvdata=[];
         var gasolineData=[];
@@ -231,6 +295,7 @@
                 d3.select("#Gasoline").style("background", 'rgb(211, 211, 211)');
                 d3.select("#Diesel").style("background", orginalStyle);
                 d3.select("#Electric").style("background", orginalStyle);
+                
             }else if(source === 'Diesel'){
                 sel = 'Diesel';
                 d3.select("#content-text").html('<h4>Diesel Data</h4><br>'+bodyTextDiesel);
@@ -564,70 +629,5 @@
 	</script>
 </head>
 
-<body onload='init()'>
-
-	<header id="header" style="font-family: serif;font-size: 40px;padding-top:.5em;padding-bottom:0"><p>Mileage Analysis For Automotive Makers</p></header>
-    <div id="container">
-
-		<main id="center" class="column" style="background-color: rgb(240, 240, 240);">
-			<article style="padding-left: 10em">
-				<!--p><script>generateText(50)</script></p -->
-				<!--svg width=500 height=700></svg -->
-				<!--style> rect {fill: lightblue; stroke: black; }</style -->
-				<div id="barChartDiv">
-                <svg width="1100" height="600" id="chart"></svg>
-		  	</div>
-            <div id="tooltip"></div>
-				<!--div id="bubleChartDiv" style="display:none">
-				   <svg width=800 height=600>
-			   	</svg>
-		  	</div -->
-
-			<div id="" role="group" class="btn-group" >
-            
-
-			<button id="HighwayMPG" type="button" class="btn btn-default" onClick="dispatchHighway_City('Highway');">HighwayMPG</button>
-         	<button id="CityMPG"  type="button" class="btn btn-default"onClick="dispatchHighway_City('City');">CityMPG</button>
-         	<!--button id="Clear"  type="button" class="" onClick="dispatchClear('Clear');">Clear</button> -->
-			</div>
-			</article>
-		</main>
-
-		<nav id="left" class="column">
-	<div id="" class="btn-group" role="group" aria-label="questions to be answered">
-	<button id="All" type="button" class="btn btn-default" onClick="dispatchButton('All');">All</button>
-  	<button id="Gasoline" type="button" class="btn btn-default" onClick="dispatchButton('Gasoline');">Gasoline</button>
-  	<button id="Diesel" type="button" class="btn btn-default" onClick="dispatchButton('Diesel');">Diesel</button>
-  	<button id="Electric" type="button" class="btn btn-default" onClick="dispatchButton('Electric');">Electric</button>
-
- 	</div>
-			<ul>
-				<li>
-					<div id="content-text"></div>
-				</li>
-			</ul>
-			<!--h3>Left heading</h3>
-			<ul>
-				<li><a href="#">Link 1</a></li>
-				<li><a href="#">Link 2</a></li>
-				<li><a href="#">Link 3</a></li>
-				<li><a href="#">Link 4</a></li>
-				<li><a href="#">Link 5</a></li>
-			</ul -->
-
-		</nav>
-
-		<!--div id="right" class="column">
-			<h3>Right heading</h3>
-			<p><script>generateText(1)</script></p>
-		</div -->
-
-	</div>
-
-	<div id="footer-wrapper">
-		<!--footer id="footer"><p>Footer...</p></footer-->
-	</div>
-
-</body>
 
 </html>
