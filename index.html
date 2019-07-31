@@ -287,6 +287,8 @@
                 d3.select("#Gasoline").style("background", orginalStyle);
                 d3.select("#Diesel").style("background", orginalStyle);
                 d3.select("#Electric").style("background", orginalStyle);
+                document.getElementById('HighwayMPG').style.visibility = 'visible';
+                document.getElementById('CityMPG').style.visibility = 'visible';
             }else if(source === 'Gasoline'){
                     d3.select("#content-text").html('<h4>Gasoline Data</h4><br>'+bodyTextGasoline);
                 dataToChart = gasolineData;
@@ -295,6 +297,8 @@
                 d3.select("#Gasoline").style("background", 'rgb(211, 211, 211)');
                 d3.select("#Diesel").style("background", orginalStyle);
                 d3.select("#Electric").style("background", orginalStyle);
+                document.getElementById('HighwayMPG').style.visibility = 'hidden';
+                document.getElementById('CityMPG').style.visibility = 'hidden';
                 
             }else if(source === 'Diesel'){
                 sel = 'Diesel';
@@ -304,6 +308,7 @@
                 d3.select("#Gasoline").style("background", orginalStyle);
                 d3.select("#Diesel").style("background",'rgb(211, 211, 211)');
                 d3.select("#Electric").style("background", orginalStyle);
+                
             } else if (source === 'Electric'){
                 sel = 'Electric';
                 d3.select("#content-text").html('<h4>Electric Data</h4><br>'+bodyTextElectric);
@@ -314,15 +319,7 @@
                 d3.select("#Electric").style("background", 'rgb(211, 211, 211)');
 
             }
-            var highwayMPGStyle= d3.select("#HighwayMPG").style("background");
-            var cityMPGStyle= d3.select("#CityMPG").style("background");
-            if(highwayMPGStyle.includes('rgb(255, 255, 255)') && cityMPGStyle.includes('rgb(255, 255, 255)')){
-                d3.select("#HighwayMPG").style("background", 'rgb(211, 211, 211)');
-            }
-            else{
-                d3.select("#HighwayMPG").style("background", cityMPGStyle);
-                d3.select("#CityMPG").style("background", highwayMPGStyle);
-            }
+
 
             barChart(dataToChart);
             //if(buble){
