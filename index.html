@@ -131,6 +131,7 @@
 
     #story-buttons {margin-left: 40px; margin-top:40px}
     #commentary {margin-top: 100px;left:120px;font-size:36pt; font-family: "monospace";text-align:center;}
+   
     #tooltip {
         opacity: 0;
         position: absolute;			
@@ -140,9 +141,10 @@
         padding: 2px;				
         font: 12px sans-serif;		
         background: #ABEBC6;	
-        border: 0px;		
+        border: 10px;		
         border-radius: 8px;			
         pointer-events: none;	
+        border-bottom: 1px dotted black;
     }
     circle {fill: lightblue; stroke: black;}
     rect {fill: lightblue; stroke: black; }
@@ -167,7 +169,7 @@
 					<br>Engine Displacement
 				</div>
                     <div id="barChartDiv">
-                    <svg width="1100" height="600" id="chart"></svg>
+                    <svg width="800" height="600" id="chart"></svg>
                 </div>
                 <div id="tooltip"></div>
                     <!--div id="bubleChartDiv" style="display:none">
@@ -244,7 +246,8 @@
         var orginalStyle= d3.select("#HighwayMPG").style("background");        
 
         async function init() {
-            csvdata = await d3.csv('cars2017.csv');
+            //csvdata = await d3.csv('cars2017.csv');
+            csvdata = await d3.csv('https://flunky.github.io/cars2017.csv');
             //csvdata = await d3.csv('https://ajacob2019.github.io/cars2017.csv');
             
             for (var i = 0; i < csvdata.length; i++) {
@@ -647,8 +650,8 @@
                }
                var htmltext = 
                 tooltip.style("opacity", 1)
-                .style("left",(d3.event.pageX - 200)+"px")
-                .style("top",(d3.event.pageY - 100)+"px")
+                .style("left",(d3.event.pageX -200 )+"px")
+                .style("top",(d3.event.pageY -100)+"px")
                 .html(htmltxt );
             })
             .on("mouseout", function() { tooltip.style("opacity", 0) })
@@ -687,8 +690,8 @@
                     aTitle = "Cylinder";
                     aDxMax = 70;
                     aDxMin = 70;
-                    aDyMax = 3;
-                    aDyMin =40;
+                    aDyMax = 0;
+                    aDyMin =30;
             }
             //setTimeout(insertAnnotation(max_x, max_y), 3000);
             //insertAnnotation(max_x, max_y);
@@ -697,7 +700,7 @@
             setTimeout(function(){ insertAnnotation(min_x, min_y, aDxMin, aDyMin,aTitle, aLabel_min); }, 00);
         }
         function insertAnnotation(aX, aY, aDx, aDy, aTitle, aLable){ 
-        
+         /*https://www.d3-graph-gallery.com/graph/custom_annotation.html*/
             var annotationsRight = [
             {
             note: {
